@@ -31,10 +31,13 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:textColor="?attr/colorControlHighlight"
-        android:id="@+id/tvScreenname"/>
+        android:id="@+id/tvScreenname"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/tvUsername"
+        android:layout_toEndOf="@+id/tvUsername"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp" />
 
     <TextView
         android:text="TextView"
@@ -45,4 +48,15 @@
         android:layout_toEndOf="@+id/ivProfile"
         android:layout_marginTop="12dp"
         android:id="@+id/tvBody"/>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="6dp"
+        android:layout_alignBaseline="@+id/tvScreenname"
+        android:layout_alignBottom="@+id/tvScreenname"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

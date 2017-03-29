@@ -28,19 +28,33 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+
         lvTweets = (ListView) findViewById(R.id.lvTweets);
-        tweets = new ArrayList<Tweet>();
+        tweets = new ArrayList<>();
 
         aTweets = new TweetsArrayAdapter(this, tweets);
 
         lvTweets.setAdapter(aTweets);
 
         client = TwitterApplication.getRestClient();
-        populateTimeline();
+
+        populateTimeline(1, 0);
+
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                Log.i("INFO", "Asking for on scroll refresh");
+
+                populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
+
+                return true;
+
+            }
+        });
     }
 
-    private void populateTimeline(){
-        client.getHomeTimeline(new JsonHttpResponseHandler(){
+    private void populateTimeline(int sinceId, long maxId){
+        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG", response.toString());
