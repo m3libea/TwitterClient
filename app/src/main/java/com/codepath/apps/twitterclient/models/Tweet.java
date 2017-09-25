@@ -3,6 +3,7 @@ package com.codepath.apps.twitterclient.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,15 @@ import java.util.ArrayList;
  * Created by m3libea on 3/26/17.
  */
 
+@Parcel
 public class Tweet {
     private String body;
     private long uid;
     private User user;
     private String createdAt;
+
+    public Tweet() {
+    }
 
     public long getUid() {
         return uid;

@@ -10,7 +10,7 @@ import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
-import com.codepath.apps.twitterclient.utils.EndlessScrollListener;
+import com.codepath.apps.twitterclient.external.EndlessScrollListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;

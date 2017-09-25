@@ -1,4 +1,4 @@
-package com.codepath.apps.twitterclient.utils;
+package com.codepath.apps.twitterclient.external;
 
 import android.widget.AbsListView;
 
