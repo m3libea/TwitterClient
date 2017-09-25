@@ -1,11 +1,12 @@
-package com.codepath.apps.twitterclient;
-
-import com.raizlabs.android.dbflow.config.FlowConfig;
-import com.raizlabs.android.dbflow.config.FlowLog;
-import com.raizlabs.android.dbflow.config.FlowManager;
+package com.codepath.apps.twitterclient.api;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.codepath.apps.twitterclient.TwitterClient;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowLog;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 /*
  * This is the Android application itself and is used to configure various settings
