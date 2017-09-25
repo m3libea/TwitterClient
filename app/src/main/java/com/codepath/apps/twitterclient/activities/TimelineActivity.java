@@ -6,8 +6,8 @@ import android.util.Log;
 import android.widget.ListView;
 
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.api.TwitterApplication;
-import com.codepath.apps.twitterclient.TwitterClient;
+import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.EndlessScrollListener;
