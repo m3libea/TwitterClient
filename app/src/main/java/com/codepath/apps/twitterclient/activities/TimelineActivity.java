@@ -10,6 +10,7 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
+import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -26,6 +27,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private TwitterClient client;
     private TweetsAdapter aTweets;
+    private EndlessRecyclerViewScrollListener listener;
 
     private ArrayList<Tweet> tweets;
 
@@ -43,23 +45,25 @@ public class TimelineActivity extends AppCompatActivity {
 
         tweets = new ArrayList<>();
 
+        setRecyclerView();
+
+    }
+
+    private void setRecyclerView() {
         aTweets = new TweetsAdapter(this, tweets);
         rvTweets.setAdapter(aTweets);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager lyManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(lyManager);
 
         populateTimeline(1, 0);
 
-//        rvTweets.setOnScrollListener(new EndlessScrollListener() {
-//            @Override
-//            public boolean onLoadMore(int page, int totalItemsCount) {
-//                Log.i("INFO", "Asking for on scroll refresh");
-//
-//                populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
-//
-//                return true;
-//
-//            }
-//        });
+        listener = new EndlessRecyclerViewScrollListener(lyManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
+            }
+        };
+        rvTweets.addOnScrollListener(listener);
     }
 
     private void populateTimeline(int sinceId, long maxId){
