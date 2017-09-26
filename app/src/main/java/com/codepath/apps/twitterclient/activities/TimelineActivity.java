@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.codepath.apps.twitterclient.R;
@@ -12,6 +13,7 @@ import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -33,6 +35,8 @@ public class TimelineActivity extends AppCompatActivity {
 
     @BindView(R.id.rvTweets)
     RecyclerView rvTweets;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
 
     @Override
@@ -42,6 +46,10 @@ public class TimelineActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         client = TwitterApplication.getRestClient();
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setLogo(R.drawable.ic_twitter);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         tweets = new ArrayList<>();
 
@@ -63,7 +71,11 @@ public class TimelineActivity extends AppCompatActivity {
                 populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
             }
         };
+
         rvTweets.addOnScrollListener(listener);
+
+        TweetDividerDecoration line = new TweetDividerDecoration(this);
+        rvTweets.addItemDecoration(line);
     }
 
     private void populateTimeline(int sinceId, long maxId){
