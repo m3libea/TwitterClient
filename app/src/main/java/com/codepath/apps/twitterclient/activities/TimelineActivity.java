@@ -2,12 +2,13 @@ package com.codepath.apps.twitterclient.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
-import com.codepath.apps.twitterclient.adapters.TweetsArrayAdapter;
+import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,7 +25,7 @@ import cz.msebera.android.httpclient.Header;
 public class TimelineActivity extends AppCompatActivity {
 
     private TwitterClient client;
-    private TweetsArrayAdapter aTweets;
+    private TweetsAdapter aTweets;
 
     private ArrayList<Tweet> tweets;
 
@@ -42,10 +43,9 @@ public class TimelineActivity extends AppCompatActivity {
 
         tweets = new ArrayList<>();
 
-//        aTweets = new TweetsArrayAdapter(this, tweets);
-//
-//        rvTweets.setAdapter(aTweets);
-
+        aTweets = new TweetsAdapter(this, tweets);
+        rvTweets.setAdapter(aTweets);
+        rvTweets.setLayoutManager(new LinearLayoutManager(this));
 
         populateTimeline(1, 0);
 
@@ -68,7 +68,8 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG", response.toString());
 
-                aTweets.addAll(Tweet.fromJSONArray(response));
+                tweets.addAll(Tweet.fromJSONArray(response));
+                aTweets.notifyDataSetChanged();
             }
 
             @Override
