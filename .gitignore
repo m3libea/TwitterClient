@@ -63,3 +63,6 @@ local.properties
 .idea
 build
 import-summary.txt
+
+#Local
+.DS_Store
