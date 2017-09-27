@@ -32,7 +32,7 @@ public class User {
     }
 
     public String getProfileImageURL() {
-        return profileImageURL;
+        return profileImageURL.replace("_normal", "_bigger");
     }
 
     public static User fromJSON(JSONObject jsonObject){

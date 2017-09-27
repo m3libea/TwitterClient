@@ -16,6 +16,7 @@ import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.models.User;
 import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -34,6 +35,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     private EndlessRecyclerViewScrollListener listener;
 
     private ArrayList<Tweet> tweets;
+    private User user;
 
     ActivityTimelineBinding binding;
 
@@ -47,8 +49,30 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         tweets = new ArrayList<>();
 
+        getUser();
         setupView();
 
+        populateTimeline(1, -1);
+
+
+
+    }
+
+    private void getUser() {
+
+        client.getAccount(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                user = User.fromJSON(response);
+                //TODO Update toolbar with User image
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d(TAG, "Error getting the account" + errorResponse.toString());
+            }
+        });
     }
 
     private void setupView() {
@@ -71,7 +95,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         binding.rvTweets.setLayoutManager(lyManager);
 
-        populateTimeline(1, -1);
 
         listener = new EndlessRecyclerViewScrollListener(lyManager) {
             @Override
@@ -90,11 +113,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
 
         });
-        // Configure the refreshing colors
-//        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
         binding.swipeContainer.setColorSchemeResources(R.color.primary,
                 R.color.primary_dark,
                 R.color.twitterLight,
