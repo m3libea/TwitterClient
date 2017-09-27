@@ -8,5 +8,6 @@
     <color name="background">#c0deed</color>
     <color name="textMenus">#FFFFFF</color>
     <color name="badText">#b71c1c</color>
+    <color name="lightText">#AAB8C3</color>
 
 </resources>

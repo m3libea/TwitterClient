@@ -29,13 +29,15 @@
                 android:layout_width="@dimen/dp50"
                 android:layout_height="@dimen/dp50"
                 tools:src="@drawable/ic_twitter"
-                android:tint="@color/primary"/>
+                android:tint="@color/primary"
+                android:layout_marginRight="@dimen/dp10"/>
             <LinearLayout
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toRightOf="@id/ivProfile"
-                android:layout_margin="@dimen/dp10"
+                android:gravity="center_vertical"
                 android:id="@+id/llInfo">
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvUsername"
-                    android:text="@{tweet.user.name}"
+                    android:text="@{`@` + tweet.user.name}"
                     tools:text="\@m3libea"/>
             </LinearLayout>
             <TextView
@@ -69,38 +71,52 @@
                 android:layout_height="wrap_content"
                 tools:text="26th September 2017"
                 android:layout_below="@+id/tvBody"
-                android:text="@{tweet.createdAt}"
-                android:textColor="@color/twitterLight"/>
+                android:text='@{tweet.formattedDate}'
+                android:textColor="@color/lightText"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDate"
-                android:layout_marginTop="@dimen/dp20">
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginRight="@dimen/dp10">
                 <Button
                     android:id="@+id/btReply"
                     android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp24"
-                    android:background="@drawable/ic_twitter_newmessage"
-                    android:layout_marginLeft="@dimen/dp50"/>
+                    android:layout_height="@dimen/dp20"
+                    android:background="@drawable/ic_twitter_reply_outline"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
                 <Button
                     android:id="@+id/btRt"
                     android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp24"
-                    android:background="@drawable/ic_twitter_retweet"
-                    android:layout_marginLeft="@dimen/dp50"/>
+                    android:layout_height="@dimen/dp20"
+                    android:background="@drawable/ic_twitter_retweet"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
                 <Button
                     android:id="@+id/btLike"
                     android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp24"
-                    android:background="@drawable/ic_twitter_like_outline"
-                    android:layout_marginLeft="@dimen/dp50"/>
+                    android:layout_height="@dimen/dp20"
+                    android:background="@drawable/ic_twitter_like_outline"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
                 <Button
                     android:id="@+id/btMessage"
                     android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp24"
-                    android:background="@drawable/ic_twitter_newmessage"
-                    android:layout_marginLeft="@dimen/dp50"/>
+                    android:layout_height="@dimen/dp20"
+                    android:background="@drawable/ic_twitter_newmessage"/>
             </LinearLayout>
 
         </RelativeLayout>
