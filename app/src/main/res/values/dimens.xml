@@ -4,5 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="action_button_margin">16dp</dimen>
+    <dimen name="dp10">10dp</dimen>
+    <dimen name="dp24">24dp</dimen>
 
 </resources>

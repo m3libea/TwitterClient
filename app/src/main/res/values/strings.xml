@@ -4,5 +4,9 @@
     <string name="app_name">TwitterClient</string>
     <string name="login_label">Connect to Twitter</string>
     <string name="title_timeline">Home Timeline</string>
+    <string name="btnTweet">Tweet</string>
+    <string name="compose_hint">What\'s up?</string>
+    <string name="toastEmptyTweet">Empty tweet</string>
+
 
 </resources>

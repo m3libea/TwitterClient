@@ -1,6 +1,8 @@
 package com.codepath.apps.twitterclient.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.twitterclient.fragments.ComposeFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -25,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity  implements ComposeFragment.ComposeDialogListener{
 
     private TwitterClient client;
     private TweetsAdapter aTweets;
@@ -37,7 +40,8 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
+    @BindView(R.id.faCompose)
+    FloatingActionButton faCompose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,12 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
 
         setRecyclerView();
+
+        faCompose.setOnClickListener(view -> {
+            FragmentManager fm = getSupportFragmentManager();
+            ComposeFragment filterFragment = ComposeFragment.newInstance();
+            filterFragment.show(fm, "fragment_compose");
+        });
 
     }
 
@@ -82,7 +92,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("DEBUG", response.toString());
+                Log.d("Timeline", "Populate tweets: " + response.toString());
 
                 tweets.addAll(Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
@@ -93,5 +103,25 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d("DEBUG", errorResponse.toString());
             }
         });
+    }
+
+    @Override
+    public void onFinishingFilter(String body, Boolean tweet) {
+        if (tweet){
+            //TODO postTweet
+            Log.d("Timeline", "Coming back from compose: " + body);
+//            client.composeTweet("This is a test! #codepath", new JsonHttpResponseHandler(){
+//                @Override
+//                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+//                    Log.d("DEBUG", response.toString());
+//
+//                }
+//
+//                @Override
+//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                    Log.d("DEBUG", errorResponse.toString());
+//                }
+//            });
+        }
     }
 }

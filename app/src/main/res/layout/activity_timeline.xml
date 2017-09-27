@@ -30,6 +30,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/faCompose"
         android:src="@drawable/ic_twitter_newtweet"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/action_button_margin"
