@@ -13,10 +13,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="REST_CONSUMER_KEY" android:value="MnfyySDTafn0yiTvvZ9mpaZTh" />
-        <meta-data android:name="REST_CONSUMER_SECRET" android:value="JFqX5b003LqF1T9S4L3U5T5PhqFS2MxNLK0pYrTpnDckho9t8f" />
-
+        <meta-data
+            android:name="REST_CONSUMER_KEY"
+            android:value="MnfyySDTafn0yiTvvZ9mpaZTh" />
+        <meta-data
+            android:name="REST_CONSUMER_SECRET"
+            android:value="JFqX5b003LqF1T9S4L3U5T5PhqFS2MxNLK0pYrTpnDckho9t8f" />
 
         <activity
             android:name=".activities.LoginActivity"
@@ -38,7 +40,8 @@
                     android:scheme="oauth" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TimelineActivity"></activity>
+        <activity android:name=".activities.TimelineActivity" />
+        <activity android:name=".activities.TweetActivity"></activity>
     </application>
 
 </manifest>

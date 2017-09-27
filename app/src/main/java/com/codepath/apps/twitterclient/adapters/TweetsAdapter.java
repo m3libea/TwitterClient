@@ -1,6 +1,7 @@
 package com.codepath.apps.twitterclient.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -13,8 +14,11 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.activities.TweetActivity;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -53,6 +57,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                             circularBitmapDrawable.setCircular(true);
                             binding.ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
+            });
+
+            binding.rlRow.setOnClickListener(view -> {
+                Intent i = new Intent(context, TweetActivity.class);
+                i.putExtra("tweet", Parcels.wrap(tweet));
+                context.startActivity(i);
             });
 
         }

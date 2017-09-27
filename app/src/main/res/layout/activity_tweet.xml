@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="tweet" type="com.codepath.apps.twitterclient.models.Tweet"/>
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_tweet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.codepath.apps.twitterclient.activities.TweetActivity">
+
+        <include
+            layout="@layout/toolbar_main"
+            android:id="@+id/included"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp15">
+            <ImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="@dimen/dp50"
+                android:layout_height="@dimen/dp50"
+                tools:src="@drawable/ic_twitter"
+                android:tint="@color/primary"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/ivProfile"
+                android:layout_margin="@dimen/dp10"
+                android:id="@+id/llInfo">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvScreenname"
+                    tools:text="Rocio Romero"
+                    android:text="@{tweet.user.screenName}"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_dark"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvUsername"
+                    android:text="@{tweet.user.name}"
+                    tools:text="\@m3libea"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llInfo"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginBottom="@dimen/dp20"
+                android:textSize="@dimen/dp24"
+                android:text="@{tweet.body}"
+                android:autoLink="all"
+                tools:text="Hello world! This is a test"/>
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="26th September 2017"
+                android:layout_below="@+id/tvBody"
+                android:text="@{tweet.createdAt}"
+                android:textColor="@color/twitterLight"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDate"
+                android:layout_marginTop="@dimen/dp20">
+                <Button
+                    android:id="@+id/btReply"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_newmessage"
+                    android:layout_marginLeft="@dimen/dp50"/>
+                <Button
+                    android:id="@+id/btRt"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_retweet"
+                    android:layout_marginLeft="@dimen/dp50"/>
+                <Button
+                    android:id="@+id/btLike"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_like_outline"
+                    android:layout_marginLeft="@dimen/dp50"/>
+                <Button
+                    android:id="@+id/btMessage"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_newmessage"
+                    android:layout_marginLeft="@dimen/dp50"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>
