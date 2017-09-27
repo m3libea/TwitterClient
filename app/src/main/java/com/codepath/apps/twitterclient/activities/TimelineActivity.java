@@ -100,7 +100,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
+                Log.d("Timeline", errorResponse.toString());
             }
         });
     }
