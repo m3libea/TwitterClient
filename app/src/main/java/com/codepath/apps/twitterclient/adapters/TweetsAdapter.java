@@ -2,12 +2,16 @@ package com.codepath.apps.twitterclient.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.Tweet;
@@ -39,7 +43,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             Glide.with(getContext())
                     .load(tweet.getUser().getProfileImageURL())
-                    .into(binding.ivProfile);
+                    .asBitmap()
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(binding.ivProfile) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            binding.ivProfile.setImageDrawable(circularBitmapDrawable);
+                    }
+            });
 
         }
     }
