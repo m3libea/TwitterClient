@@ -28,6 +28,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity  implements ComposeFragment.ComposeDialogListener{
 
+    private final String TAG = "Timeline";
     private TwitterClient client;
     private TweetsAdapter aTweets;
     private EndlessRecyclerViewScrollListener listener;
@@ -85,15 +86,19 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         binding.rvTweets.addItemDecoration(line);
 
         binding.swipeContainer.setOnRefreshListener(() -> {
-            Log.d("Timeline", "Refresh");
+            Log.d("TAG", "Refresh");
             refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
 
         });
         // Configure the refreshing colors
-        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+//        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
+        binding.swipeContainer.setColorSchemeResources(R.color.primary,
+                R.color.primary_dark,
+                R.color.twitterLight,
+                R.color.accent);
 
     }
 
@@ -101,7 +106,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("Timeline", "Refresh tweets: " + response.toString());
+                Log.d(TAG, "Refresh tweets: " + response.toString());
 
                 tweets.addAll(0,Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
@@ -110,7 +115,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("Timeline", errorResponse.toString());
+                Log.d(TAG, errorResponse.toString());
             }
         });
     }
@@ -118,7 +123,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("Timeline", "Populate tweets: " + response.toString());
+                Log.d(TAG, "Populate tweets: " + response.toString());
 
                 tweets.addAll(Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
@@ -126,7 +131,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("Timeline", errorResponse.toString());
+                Log.d(TAG, errorResponse.toString());
             }
         });
     }

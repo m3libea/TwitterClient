@@ -5,6 +5,10 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,16 +50,34 @@ public class ComposeFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        binding.btnTweet.setOnClickListener(new View.OnClickListener() {
+
+        int maxTweetChar = getResources().getInteger(R.integer.max_tweet_length);
+        binding.tvReply.setVisibility(View.GONE);
+        binding.tvCharsLeft.setText(Integer.toString(maxTweetChar));
+        binding.btnTweet.setOnClickListener(view1 -> postTweet());
+        binding.btnClose.setOnClickListener(view12 -> close());
+        binding.etBody.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                postTweet();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-        });
-        binding.btnClose.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                close();
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                int left = maxTweetChar - editable.length();
+
+                if (left < 0){
+                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(),R.color.badText));
+                }else{
+                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(), R.color.background));
+                }
+
+                binding.tvCharsLeft.setText(Integer.toString(left));
+
             }
         });
     }

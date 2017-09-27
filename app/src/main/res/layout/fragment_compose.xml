@@ -8,15 +8,29 @@
         android:padding="@dimen/dp10"
         tools:context="com.codepath.apps.twitterclient.fragments.ComposeFragment">
 
-        <Button
-            android:id="@+id/btnClose"
-            android:layout_width="@dimen/dp24"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_twitter_cross"/>
 
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnClose"
+                android:layout_width="@dimen/dp24"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_twitter_cross"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvReply"
+                android:layout_marginLeft="@dimen/dp10"
+                tools:text="Reply too"
+                android:textColor="@color/background"/>
+
+        </LinearLayout>
         <EditText
             android:id="@+id/etBody"
-            android:lines="5"
+            android:lines="8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/compose_hint"
@@ -24,20 +38,33 @@
             android:textColor="@color/textPrimary"
             android:inputType="textMultiLine"
             android:layout_marginTop="@dimen/dp10"
+            android:textSize="@dimen/dp15"
             android:gravity="top"
             android:background="@android:color/transparent"/>
-        <Button
-            android:id="@+id/btnTweet"
-            android:minHeight="0dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btnTweet"
-            android:layout_gravity="bottom|right"
-            android:textAllCaps="false"
-            android:background="@drawable/button"
-            android:padding="0dp"
-            android:textColor="@color/textMenus" />
-
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvCharsLeft"
+                tools:text="140"
+                android:textColor="@color/background"/>
+            <Button
+                android:id="@+id/btnTweet"
+                android:minHeight="0dp"
+                android:layout_width="@dimen/dp60"
+                android:layout_height="wrap_content"
+                android:text="@string/btnTweet"
+                android:textAllCaps="false"
+                android:background="@drawable/button"
+                android:padding="0dp"
+                android:textColor="@color/textMenus"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
     </LinearLayout>
 
 </layout>

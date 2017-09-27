@@ -7,5 +7,6 @@
     <color name="textPrimary">#000000</color>
     <color name="background">#c0deed</color>
     <color name="textMenus">#FFFFFF</color>
+    <color name="badText">#b71c1c</color>
 
 </resources>

@@ -18,10 +18,10 @@ import java.util.Locale;
 
 @Parcel
 public class Tweet {
-    private String body;
-    private long uid;
-    private User user;
-    private String createdAt;
+    public String body;
+    public long uid;
+    public User user;
+    public String createdAt;
 
     public Tweet() {
     }
