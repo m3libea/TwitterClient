@@ -51,6 +51,7 @@
             android:layout_toRightOf="@+id/ivProfile"
             android:layout_toEndOf="@+id/ivProfile"
             android:layout_marginTop="12dp"
+            android:autoLink="all"
             android:id="@+id/tvBody"/>
 
         <TextView
