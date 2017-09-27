@@ -70,7 +70,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         binding.rvTweets.setLayoutManager(lyManager);
 
-        populateTimeline(1, 0);
+        populateTimeline(1, -1);
 
         listener = new EndlessRecyclerViewScrollListener(lyManager) {
             @Override
@@ -83,8 +83,37 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         TweetDividerDecoration line = new TweetDividerDecoration(this);
         binding.rvTweets.addItemDecoration(line);
+
+        binding.swipeContainer.setOnRefreshListener(() -> {
+            Log.d("Timeline", "Refresh");
+            refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
+
+        });
+        // Configure the refreshing colors
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
+    private void refreshTimeline(long sinceId, long maxId){
+        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d("Timeline", "Refresh tweets: " + response.toString());
+
+                tweets.addAll(0,Tweet.fromJSONArray(response));
+                aTweets.notifyDataSetChanged();
+                binding.swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("Timeline", errorResponse.toString());
+            }
+        });
+    }
     private void populateTimeline(int sinceId, long maxId){
         client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
