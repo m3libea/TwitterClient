@@ -157,20 +157,24 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     @Override
     public void onFinishingFilter(String body, Boolean tweet) {
         if (tweet){
-            //TODO postTweet
-            Log.d("Timeline", "Coming back from compose: " + body);
-//            client.composeTweet("This is a test! #codepath", new JsonHttpResponseHandler(){
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                    Log.d("DEBUG", response.toString());
-//
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                    Log.d("DEBUG", errorResponse.toString());
-//                }
-//            });
+            client.composeTweet(body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length),
+                    body.length())),
+                    new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                    Tweet tweet = Tweet.fromJSON(response);
+                    tweets.add(0, tweet);
+                    aTweets.notifyDataSetChanged();
+                    Log.d(TAG, "Create Tweet: " + response.toString());
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(TAG, errorResponse.toString());
+                }
+            });
         }
     }
 }
