@@ -59,7 +59,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     }
             });
 
-            binding.rlRow.setOnClickListener(view -> {
+            binding.llRow.setOnClickListener(view -> {
                 Intent i = new Intent(context, TweetActivity.class);
                 i.putExtra("tweet", Parcels.wrap(tweet));
                 context.startActivity(i);

@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,7 +72,7 @@ public class ComposeFragment extends DialogFragment {
                 if (left < 0){
                     binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(),R.color.badText));
                 }else{
-                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(), R.color.background));
+                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(), R.color.lightText));
                 }
 
                 binding.tvCharsLeft.setText(Integer.toString(left));

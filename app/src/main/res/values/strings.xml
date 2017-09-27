@@ -7,6 +7,11 @@
     <string name="btnTweet">Tweet</string>
     <string name="compose_hint">What\'s up?</string>
     <string name="toastEmptyTweet">Empty tweet</string>
+    <string name="example_username">\@m3libea</string>
+    <string name="example_name">Rocio Romero</string>
+    <string name="example_body">This is a test</string>
+    <string name="example_Date">2 min ago</string>
+    <string name="example_date_format">26th September 2017</string>
 
 
 </resources>

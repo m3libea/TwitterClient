@@ -32,13 +32,15 @@ public class TweetActivity extends AppCompatActivity {
 
         client = TwitterApplication.getRestClient();
 
-        setSupportActionBar(binding.included.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Tweet");
-
         tweet = Parcels.unwrap(getIntent().getExtras().getParcelable("tweet"));
 
+        setupView();
+
+
+    }
+
+    private void setupView() {
+        setupActionBar();
         binding.setTweet(tweet);
 
         Glide.with(this)
@@ -54,6 +56,13 @@ public class TweetActivity extends AppCompatActivity {
                         binding.ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void setupActionBar() {
+        setSupportActionBar(binding.included.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Tweet");
     }
 
     @Override

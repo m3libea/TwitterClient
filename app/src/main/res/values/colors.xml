@@ -9,5 +9,6 @@
     <color name="textMenus">#FFFFFF</color>
     <color name="badText">#b71c1c</color>
     <color name="lightText">#AAB8C3</color>
+    <color name="separators">#d3e0ea</color>
 
 </resources>

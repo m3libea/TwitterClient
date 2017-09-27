@@ -52,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tvUsername"
                     android:text="@{`@` + tweet.user.name}"
-                    tools:text="\@m3libea"/>
+                    android:textColor="@color/lightText"
+                    tools:text="@string/example_username"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/tvBody"
@@ -64,12 +65,12 @@
                 android:textSize="@dimen/dp24"
                 android:text="@{tweet.body}"
                 android:autoLink="all"
-                tools:text="Hello world! This is a test"/>
+                tools:text="@string/example_body"/>
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="26th September 2017"
+                tools:text="@string/example_date_format"
                 android:layout_below="@+id/tvBody"
                 android:text='@{tweet.formattedDate}'
                 android:textColor="@color/lightText"/>

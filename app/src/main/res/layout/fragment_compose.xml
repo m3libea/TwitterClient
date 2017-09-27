@@ -25,7 +25,7 @@
                 android:id="@+id/tvReply"
                 android:layout_marginLeft="@dimen/dp10"
                 tools:text="Reply too"
-                android:textColor="@color/background"/>
+                android:textColor="@color/lightText"/>
 
         </LinearLayout>
         <EditText
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvCharsLeft"
                 tools:text="140"
-                android:textColor="@color/background"/>
+                android:textColor="@color/lightText"/>
             <Button
                 android:id="@+id/btnTweet"
                 android:minHeight="0dp"
