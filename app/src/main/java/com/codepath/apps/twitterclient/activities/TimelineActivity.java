@@ -1,18 +1,18 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
+import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
@@ -24,8 +24,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity  implements ComposeFragment.ComposeDialogListener{
@@ -36,42 +34,41 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
     private ArrayList<Tweet> tweets;
 
-    @BindView(R.id.rvTweets)
-    RecyclerView rvTweets;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.faCompose)
-    FloatingActionButton faCompose;
+    ActivityTimelineBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
 
-        ButterKnife.bind(this);
         client = TwitterApplication.getRestClient();
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setLogo(R.drawable.ic_twitter);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         tweets = new ArrayList<>();
 
+        setupView();
+
+    }
+
+    private void setupView() {
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setLogo(R.drawable.ic_twitter);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         setRecyclerView();
 
-        faCompose.setOnClickListener(view -> {
+        binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();
             ComposeFragment filterFragment = ComposeFragment.newInstance();
             filterFragment.show(fm, "fragment_compose");
         });
-
     }
 
     private void setRecyclerView() {
         aTweets = new TweetsAdapter(this, tweets);
-        rvTweets.setAdapter(aTweets);
+        binding.rvTweets.setAdapter(aTweets);
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
-        rvTweets.setLayoutManager(lyManager);
+        binding.rvTweets.setLayoutManager(lyManager);
 
         populateTimeline(1, 0);
 
@@ -82,10 +79,10 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             }
         };
 
-        rvTweets.addOnScrollListener(listener);
+        binding.rvTweets.addOnScrollListener(listener);
 
         TweetDividerDecoration line = new TweetDividerDecoration(this);
-        rvTweets.addItemDecoration(line);
+        binding.rvTweets.addItemDecoration(line);
     }
 
     private void populateTimeline(int sinceId, long maxId){

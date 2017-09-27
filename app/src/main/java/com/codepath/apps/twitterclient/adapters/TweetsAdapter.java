@@ -1,21 +1,18 @@
 package com.codepath.apps.twitterclient.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.Tweet;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
@@ -30,32 +27,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.ivProfile)
-        ImageView ivProfile;
-        @BindView(R.id.tvScreenname)
-        TextView tvScreenName;
-        @BindView(R.id.tvUsername)
-        TextView tvUsername;
-        @BindView(R.id.tvBody)
-        TextView tvBody;
-        @BindView(R.id.tvDate)
-        TextView tvDate;
+        ItemTweetBinding binding;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            ButterKnife.bind(this, itemView);
+            binding = DataBindingUtil.bind(itemView);
         }
 
         public void bind(Tweet tweet){
-            tvUsername.setText(tweet.getUser().getName());
-            tvScreenName.setText(tweet.getUser().getScreenName());
-            tvBody.setText(tweet.getBody());
-            tvDate.setText(tweet.getRelativeTimeAgo());
 
             Glide.with(getContext())
                     .load(tweet.getUser().getProfileImageURL())
-                    .into(ivProfile);
+                    .into(binding.ivProfile);
 
         }
     }
@@ -78,9 +62,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Tweet tweet = tweets.get(position);
+        final Tweet tweet = tweets.get(position);
 
         holder.bind(tweet);
+        holder.binding.setTweet(tweet);
+        holder.binding.executePendingBindings();
     }
 
     @Override

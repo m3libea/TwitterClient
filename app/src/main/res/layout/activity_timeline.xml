@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_timeline"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.codepath.apps.twitterclient.activities.TimelineActivity">
-
-    <LinearLayout
-        android:orientation="vertical"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.codepath.apps.twitterclient.activities.TimelineActivity">
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:minHeight="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleTextColor="@android:color/white"
+                android:background="?attr/colorPrimary">
+            </android.support.v7.widget.Toolbar>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvTweets"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/faCompose"
+            android:src="@drawable/ic_twitter_newtweet"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="@dimen/action_button_margin"
+            app:fabSize="normal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:titleTextColor="@android:color/white"
-            android:background="?attr/colorPrimary">
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvTweets"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/faCompose"
-        android:src="@drawable/ic_twitter_newtweet"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/action_button_margin"
-        app:fabSize="normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@id/rvTweets"
-        app:layout_anchorGravity="bottom|right"/>
-</android.support.design.widget.CoordinatorLayout>
+            app:layout_anchor="@id/rvTweets"
+            app:layout_anchorGravity="bottom|right"/>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
