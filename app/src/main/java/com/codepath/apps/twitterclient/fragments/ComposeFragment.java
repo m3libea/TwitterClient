@@ -1,11 +1,16 @@
 package com.codepath.apps.twitterclient.fragments;
 
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,8 +24,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.databinding.FragmentComposeBinding;
+import com.codepath.apps.twitterclient.models.User;
+
+import org.parceler.Parcels;
 
 import static android.content.ContentValues.TAG;
 
@@ -28,6 +38,7 @@ public class ComposeFragment extends DialogFragment {
 
     FragmentComposeBinding binding;
     String body;
+    User user;
 
     public interface ComposeDialogListener {
         void onFinishingTweet(String body, Boolean tweet);
@@ -36,17 +47,19 @@ public class ComposeFragment extends DialogFragment {
 
     }
 
-    public static ComposeFragment newInstance() {
+    public static ComposeFragment newInstance(User user ) {
         ComposeFragment fragment = new ComposeFragment();
         Bundle args = new Bundle();
+        args.putParcelable("user", Parcels.wrap(user));
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static ComposeFragment newInstance(String body) {
+    public static ComposeFragment newInstance(User user, String body) {
         ComposeFragment fragment = new ComposeFragment();
         Bundle args = new Bundle();
         args.putString("body", body);
+        args.putParcelable("user", Parcels.wrap(user));
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,6 +72,7 @@ public class ComposeFragment extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         body = (String) getArguments().get("body");
+        user = Parcels.unwrap(getArguments().getParcelable("user"));
 
         return binding.getRoot();
     }
@@ -76,6 +90,36 @@ public class ComposeFragment extends DialogFragment {
             binding.etBody.setText(body);
             setCharsLeft(maxTweetChar, binding.etBody.getEditableText());
         }
+
+        //If user not null, set image
+        if(user!=null){
+            Glide.with(getContext())
+                    .load(user.getProfileImageURL())
+                    .asBitmap()
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(binding.ivProfile) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            binding.ivProfile.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+        }else{
+            binding.ivProfile.setVisibility(View.GONE);
+        }
+
+        //Check if draft saved
+
+        SharedPreferences pref =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        if (pref.contains("draft")){
+            binding.btnDraft.setVisibility(View.VISIBLE);
+            binding.btnDraft.setOnClickListener(view13 -> getDraft(pref, maxTweetChar));
+        }
+
 
         //Listener for buttons
         binding.btnTweet.setOnClickListener(view1 -> postTweet());
@@ -101,6 +145,14 @@ public class ComposeFragment extends DialogFragment {
 
     }
 
+    private void getDraft(SharedPreferences pref, int max) {
+        String bDraft = pref.getString("draft", null);
+        binding.etBody.setText(bDraft);
+        setCharsLeft(max, binding.etBody.getEditableText());
+        pref.edit().remove("draft").commit();
+        binding.btnDraft.setVisibility(View.GONE);
+    }
+
     private void setCharsLeft(int maxTweetChar, Editable editable) {
         int left = maxTweetChar - editable.length();
 
@@ -115,7 +167,6 @@ public class ComposeFragment extends DialogFragment {
 
     private void close() {
         ComposeDialogListener listener = (ComposeDialogListener) getActivity();
-        //TODO check if empty, else draft
 
         //If edit text not empty
         if (binding.etBody.getText().toString().trim().length() > 0) {

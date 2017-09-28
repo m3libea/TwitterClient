@@ -84,7 +84,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         body.append(urlOfPage);
 
         String bCompose = body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length), body.length()));
-        ComposeFragment tweetCompose = ComposeFragment.newInstance(bCompose);
+        ComposeFragment tweetCompose = ComposeFragment.newInstance(user,bCompose);
         tweetCompose.show(fm, "fragment_compose");
 
     }
@@ -115,7 +115,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();
-            ComposeFragment tweetCompose = ComposeFragment.newInstance();
+            ComposeFragment tweetCompose = ComposeFragment.newInstance(user);
             tweetCompose.show(fm, "fragment_compose");
         });
     }
@@ -199,6 +199,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                         Tweet tweet = Tweet.fromJSON(response);
                         tweets.add(0, tweet);
                         aTweets.notifyDataSetChanged();
+                        binding.rvTweets.scrollToPosition(0);
                         Log.d(TAG, "Create Tweet: " + response.toString());
 
                     }

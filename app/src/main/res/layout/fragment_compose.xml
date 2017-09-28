@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,37 +11,65 @@
 
 
 
-        <LinearLayout
+        <FrameLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnClose"
-                android:layout_width="@dimen/dp24"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_twitter_cross"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvReply"
-                android:layout_marginLeft="@dimen/dp10"
-                tools:text="Reply too"
-                android:textColor="@color/lightText"/>
+                android:layout_gravity="left">
+                <Button
+                    android:id="@+id/btnClose"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_cross" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvReply"
+                    tools:text="Reply to"
+                    android:textColor="@color/lightText"
+                    android:layout_marginLeft="@dimen/dp5"/>
+            </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/btnDraft"
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:background="@drawable/ic_twitter_draft"
+                    android:layout_marginLeft="@dimen/dp5"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    tools:src="@mipmap/ic_launcher" />
+            </LinearLayout>
+
+
+        </FrameLayout>
+
         <EditText
             android:id="@+id/etBody"
-            android:lines="8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/compose_hint"
-            android:textColorHint="@color/background"
-            android:textColor="@color/textPrimary"
-            android:inputType="textMultiLine"
             android:layout_marginTop="@dimen/dp10"
-            android:textSize="@dimen/dp15"
+            android:background="@android:color/transparent"
             android:gravity="top"
-            android:background="@android:color/transparent"/>
+            android:hint="@string/compose_hint"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/background"
+            android:textSize="@dimen/dp15" />
+
         <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

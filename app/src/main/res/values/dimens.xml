@@ -13,5 +13,6 @@
     <dimen name="dp20">20dp</dimen>
     <dimen name="dp15">15dp</dimen>
     <dimen name="dp50">50dp</dimen>
+    <dimen name="dp8">8dp</dimen>
 
 </resources>
