@@ -1,5 +1,6 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +39,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     private User user;
 
     ActivityTimelineBinding binding;
+    FragmentManager fm;
 
 
     @Override
@@ -47,6 +49,8 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         client = TwitterApplication.getRestClient();
 
+        fm = getSupportFragmentManager();
+
         tweets = new ArrayList<>();
 
         getUser();
@@ -54,7 +58,32 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         populateTimeline(1, -1);
 
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
 
+        // Handle Intent from external app
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+
+                // Make sure to check whether returned data will be null.
+                String titleOfPage = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+                String urlOfPage = intent.getStringExtra(Intent.EXTRA_TEXT);
+                composeTweet(titleOfPage, urlOfPage);
+            }
+        }
+
+    }
+
+    private void composeTweet(String titleOfPage, String urlOfPage) {
+        StringBuffer body = new StringBuffer();
+        body.append(titleOfPage);
+        body.append(" : ");
+        body.append(urlOfPage);
+
+        String bCompose = body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length), body.length()));
+        ComposeFragment tweetCompose = ComposeFragment.newInstance(bCompose);
+        tweetCompose.show(fm, "fragment_compose");
 
     }
 
@@ -84,8 +113,8 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();
-            ComposeFragment filterFragment = ComposeFragment.newInstance();
-            filterFragment.show(fm, "fragment_compose");
+            ComposeFragment tweetCompose = ComposeFragment.newInstance();
+            tweetCompose.show(fm, "fragment_compose");
         });
     }
 
@@ -95,7 +124,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         binding.rvTweets.setLayoutManager(lyManager);
 
-
+        //Infinite scroll
         listener = new EndlessRecyclerViewScrollListener(lyManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -105,9 +134,11 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         binding.rvTweets.addOnScrollListener(listener);
 
+        //Line between rows
         TweetDividerDecoration line = new TweetDividerDecoration(this);
         binding.rvTweets.addItemDecoration(line);
 
+        //Refresh action
         binding.swipeContainer.setOnRefreshListener(() -> {
             Log.d("TAG", "Refresh");
             refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
@@ -155,25 +186,25 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     }
 
     @Override
-    public void onFinishingFilter(String body, Boolean tweet) {
+    public void onFinishingTweet(String body, Boolean tweet) {
         if (tweet){
             client.composeTweet(body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length),
                     body.length())),
                     new JsonHttpResponseHandler(){
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                    Tweet tweet = Tweet.fromJSON(response);
-                    tweets.add(0, tweet);
-                    aTweets.notifyDataSetChanged();
-                    Log.d(TAG, "Create Tweet: " + response.toString());
+                        Tweet tweet = Tweet.fromJSON(response);
+                        tweets.add(0, tweet);
+                        aTweets.notifyDataSetChanged();
+                        Log.d(TAG, "Create Tweet: " + response.toString());
 
-                }
+                    }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d(TAG, errorResponse.toString());
-                }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.d(TAG, errorResponse.toString());
+                    }
             });
         }
     }

@@ -23,9 +23,10 @@ import com.codepath.apps.twitterclient.databinding.FragmentComposeBinding;
 public class ComposeFragment extends DialogFragment {
 
     FragmentComposeBinding binding;
+    String body;
 
     public interface ComposeDialogListener {
-        void onFinishingFilter(String body, Boolean tweet);
+        void onFinishingTweet(String body, Boolean tweet);
     }
     public ComposeFragment() {
 
@@ -38,12 +39,23 @@ public class ComposeFragment extends DialogFragment {
         return fragment;
     }
 
+    public static ComposeFragment newInstance(String body) {
+        ComposeFragment fragment = new ComposeFragment();
+        Bundle args = new Bundle();
+        args.putString("body", body);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_compose, container, false);
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        body = (String) getArguments().get("body");
+
         return binding.getRoot();
     }
 
@@ -53,8 +65,19 @@ public class ComposeFragment extends DialogFragment {
         int maxTweetChar = getResources().getInteger(R.integer.max_tweet_length);
         binding.tvReply.setVisibility(View.GONE);
         binding.tvCharsLeft.setText(Integer.toString(maxTweetChar));
+
+        //Set Body from intent
+
+        if(body!=null){
+            binding.etBody.setText(body);
+            setCharsLeft(maxTweetChar, binding.etBody.getEditableText());
+        }
+
+        //Listener for buttons
         binding.btnTweet.setOnClickListener(view1 -> postTweet());
         binding.btnClose.setOnClickListener(view12 -> close());
+
+        //Listener to get the counter of chars left
         binding.etBody.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -67,23 +90,28 @@ public class ComposeFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                int left = maxTweetChar - editable.length();
-
-                if (left < 0){
-                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(),R.color.badText));
-                }else{
-                    binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(), R.color.lightText));
-                }
-
-                binding.tvCharsLeft.setText(Integer.toString(left));
+                setCharsLeft(maxTweetChar, editable);
 
             }
         });
+
+    }
+
+    private void setCharsLeft(int maxTweetChar, Editable editable) {
+        int left = maxTweetChar - editable.length();
+
+        if (left < 0){
+            binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(),R.color.badText));
+        }else{
+            binding.tvCharsLeft.setTextColor(ContextCompat.getColor(getContext(), R.color.lightText));
+        }
+
+        binding.tvCharsLeft.setText(Integer.toString(left));
     }
 
     private void close() {
         ComposeDialogListener listener = (ComposeDialogListener) getActivity();
-        listener.onFinishingFilter(null, false);
+        listener.onFinishingTweet(null, false);
         dismiss();
     }
 
@@ -96,7 +124,7 @@ public class ComposeFragment extends DialogFragment {
             Toast toast = Toast.makeText(getActivity(), R.string.toastEmptyTweet, Toast.LENGTH_SHORT);
             toast.show();
         }else {
-            listener.onFinishingFilter(body, true);
+            listener.onFinishingTweet(body, true);
             dismiss();
         }
     }
