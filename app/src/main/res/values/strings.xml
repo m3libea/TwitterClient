@@ -12,6 +12,12 @@
     <string name="example_body">This is a test</string>
     <string name="example_Date">2 min ago</string>
     <string name="example_date_format">26th September 2017</string>
+    <string name="dialog_message">Do you want to save the tweet as a draft?</string>
+    <string name="dialog_title">No empty tweet</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="toastDraftSaved">Draft saved</string>
+    <string name="toastDraftNoSaved">Tweet not saved</string>
 
 
 </resources>

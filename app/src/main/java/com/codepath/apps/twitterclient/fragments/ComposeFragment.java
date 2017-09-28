@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.databinding.FragmentComposeBinding;
+
+import static android.content.ContentValues.TAG;
 
 public class ComposeFragment extends DialogFragment {
 
@@ -111,20 +115,49 @@ public class ComposeFragment extends DialogFragment {
 
     private void close() {
         ComposeDialogListener listener = (ComposeDialogListener) getActivity();
-        listener.onFinishingTweet(null, false);
-        dismiss();
+        //TODO check if empty, else draft
+
+        //If edit text not empty
+        if (binding.etBody.getText().toString().trim().length() > 0) {
+                //Dialog to ask user if want to store the tweet on device or not.
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.dialog_message)
+                        .setTitle(R.string.dialog_title);
+
+                builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+                    String bUser = binding.etBody.getText().toString();
+                    Toast toast = Toast.makeText(getActivity(), R.string.toastDraftSaved, Toast.LENGTH_SHORT);
+                    toast.show();
+                    Log.d(TAG, "OK pushed");
+                    listener.onFinishingTweet(bUser, false);
+                    dismiss();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    Toast toast = Toast.makeText(getActivity(), R.string.toastDraftNoSaved, Toast.LENGTH_SHORT);
+                    toast.show();
+                    Log.d(TAG, "Cancel pushed");
+                    listener.onFinishingTweet(null, false);
+                    dismiss();
+                });
+
+                builder.create().show();
+        }else{
+            listener.onFinishingTweet(null, false);
+            dismiss();
+        }
+
     }
 
     private void postTweet() {
         ComposeDialogListener listener = (ComposeDialogListener) getActivity();
 
-        String body = binding.etBody.getText().toString();
+        String bUser = binding.etBody.getText().toString();
 
-        if(body.isEmpty()) {
+        if(bUser.isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), R.string.toastEmptyTweet, Toast.LENGTH_SHORT);
             toast.show();
         }else {
-            listener.onFinishingTweet(body, true);
+            listener.onFinishingTweet(bUser, true);
             dismiss();
         }
     }

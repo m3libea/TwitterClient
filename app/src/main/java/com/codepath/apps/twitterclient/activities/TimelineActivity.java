@@ -1,8 +1,10 @@
 package com.codepath.apps.twitterclient.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -206,6 +208,17 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                         Log.d(TAG, errorResponse.toString());
                     }
             });
+        }else{
+            if (body!= null){
+                //Save draft on Sharedpreferences
+                SharedPreferences pref =
+                        PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor edit = pref.edit();
+                edit.putString("draft", body);
+                edit.commit();
+                Log.d(TAG, "Draft saved " + body);
+
+            }
         }
     }
 }
