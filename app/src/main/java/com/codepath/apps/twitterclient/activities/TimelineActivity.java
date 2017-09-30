@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
@@ -126,6 +127,10 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         setSupportActionBar(binding.included.toolbar);
         getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        View logo = binding.included.toolbar.getChildAt(0);
+
+        logo.setOnClickListener(view -> binding.rvTweets.scrollToPosition(0));
 
         setRecyclerView();
 
