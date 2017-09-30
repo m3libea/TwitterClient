@@ -147,16 +147,39 @@ public class Tweet extends BaseModel{
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
 
-        String relativeDate = "";
+        StringBuffer relativeDate = new StringBuffer();
         try {
             long dateMillis = sf.parse(createdAt).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+            long nowMillis = System.currentTimeMillis();
+
+            long diff = nowMillis - dateMillis;
+
+            Lo
+
+            if (diff >= DateUtils.YEAR_IN_MILLIS){
+                relativeDate.append(diff/DateUtils.YEAR_IN_MILLIS);
+                relativeDate.append(" y");
+            }else if (diff >= DateUtils.WEEK_IN_MILLIS){
+                relativeDate.append(diff/DateUtils.WEEK_IN_MILLIS);
+                relativeDate.append(" w");
+            }else if (diff >= DateUtils.DAY_IN_MILLIS){
+                relativeDate.append(diff/DateUtils.DAY_IN_MILLIS);
+                relativeDate.append(" d");
+            }else if (diff >= DateUtils.HOUR_IN_MILLIS){
+                relativeDate.append(diff/DateUtils.HOUR_IN_MILLIS);
+                relativeDate.append(" h");
+            }else if (diff >= DateUtils.MINUTE_IN_MILLIS){
+                relativeDate.append(diff/DateUtils.MINUTE_IN_MILLIS);
+                relativeDate.append(" m");
+            }else{
+                relativeDate.append(diff/DateUtils.DAY_IN_MILLIS);
+                relativeDate.append(" s");
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return relativeDate;
+        return relativeDate.toString();
     }
 
     public String getFormattedDate() {
