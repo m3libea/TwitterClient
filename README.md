@@ -46,6 +46,8 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [X] [Retrolambda](https://github.com/evant/gradle-retrolambda)
+* [X] Relative time format like Twitter
+* [X] Rounded profiles images
 
 ## Video Walkthrough
 
@@ -63,6 +65,9 @@ Describe any challenges encountered while building the app.
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
+- [DBFlow](https://github.com/Raizlabs/DBFlow)
+- [Parceler library](http://guides.codepath.com/android/Using-Parceler)
+
 
 ## License
 

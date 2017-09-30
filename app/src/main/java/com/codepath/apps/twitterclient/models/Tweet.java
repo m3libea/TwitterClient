@@ -154,8 +154,6 @@ public class Tweet extends BaseModel{
 
             long diff = nowMillis - dateMillis;
 
-            Lo
-
             if (diff >= DateUtils.YEAR_IN_MILLIS){
                 relativeDate.append(diff/DateUtils.YEAR_IN_MILLIS);
                 relativeDate.append(" y");
