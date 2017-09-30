@@ -22,6 +22,8 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
 /**
@@ -65,6 +67,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 context.startActivity(i);
             });
 
+            if(tweet.getOneMedia()!= null){
+                int radius = 20;
+                int margin = 5;
+                Glide.with(getContext())
+                        .load(tweet.getOneMedia())
+                        .bitmapTransform(new RoundedCornersTransformation(getContext(), radius, margin))
+                        .into(binding.ivMedia);
+                binding.ivMedia.setVisibility(View.VISIBLE);
+
+            }else{
+                binding.ivMedia.setVisibility(View.GONE);
+            }
+
         }
     }
 
@@ -97,4 +112,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public int getItemCount() {
         return tweets.size();
     }
+
+
 }

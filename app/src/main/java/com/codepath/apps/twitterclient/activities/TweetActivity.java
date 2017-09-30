@@ -9,6 +9,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetActivity extends AppCompatActivity implements ComposeFragment.ComposeDialogListener{
 
@@ -65,6 +67,16 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
                         binding.ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+
+        if(tweet.getOneMedia()!= null){
+            int radius = 30; // corner radius, higher value = more rounded
+            int margin = 10;
+            Glide.with(this)
+                    .load(tweet.getOneMedia())
+                    .bitmapTransform(new RoundedCornersTransformation(this, radius, margin))
+                    .into(binding.ivMedia);
+            binding.ivMedia.setVisibility(View.VISIBLE);
+        }
 
         binding.btReply.setOnClickListener(view -> composeReply());
     }

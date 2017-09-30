@@ -135,5 +135,13 @@ public class Tweet {
         return formattedDate;
     }
 
+    public String getOneMedia() {
+        String url = null;
+        if (media != null && !media.isEmpty()) {
+            url = media.get(0).getMediaUrl();
+        }
+
+        return url;
+    }
 
 }
