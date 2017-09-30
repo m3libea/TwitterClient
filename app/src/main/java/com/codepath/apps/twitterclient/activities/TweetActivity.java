@@ -69,8 +69,8 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
                 });
 
         if(tweet.getOneMedia()!= null){
-            int radius = 30; // corner radius, higher value = more rounded
-            int margin = 10;
+            int radius = 20;
+            int margin = 5;
             Glide.with(this)
                     .load(tweet.getOneMedia())
                     .bitmapTransform(new RoundedCornersTransformation(this, radius, margin))
