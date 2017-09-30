@@ -30,11 +30,6 @@ android {
     dataBinding.enabled = true
 }
 
-repositories {
-    jcenter()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
 def dbflow_version = "4.0.0-beta5"
 
 dependencies {
