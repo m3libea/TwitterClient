@@ -1,8 +1,12 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -109,18 +113,30 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
     @Override
     public void onFinishingTweet(String body, Boolean tweet) {
         String minBody = body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length), body.length()));
-        client.composeReply(this.tweet.getUser().getScreenName(), this.tweet.getUid(), minBody, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d(TAG, "Tweet created: " + response.toString());
-                Toast toast = Toast.makeText(TweetActivity.this, R.string.toastTweetCreated, Toast.LENGTH_SHORT);
-                toast.show();
-            }
+        if (isNetworkAvailable()){
+            client.composeReply(this.tweet.getUser().getScreenName(), this.tweet.getUid(), minBody, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d(TAG, "Tweet created: " + response.toString());
+                    Toast toast = Toast.makeText(TweetActivity.this, R.string.toastTweetCreated, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, errorResponse.toString());
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(TAG, errorResponse.toString());
+                }
+            });
+        }else{
+            Snackbar bar = Snackbar.make(findViewById(R.id.activity_tweet), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG);
+            bar.show();
+        }
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }

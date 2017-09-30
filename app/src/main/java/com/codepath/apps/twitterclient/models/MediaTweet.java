@@ -1,4 +1,8 @@
 package com.codepath.apps.twitterclient.models;
+import com.codepath.apps.twitterclient.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONArray;
@@ -12,14 +16,27 @@ import java.util.ArrayList;
  * Created by m3libea on 9/28/17.
  */
 
-@Parcel
+@Table(database = MyDatabase.class)
+@Parcel(analyze = {MediaTweet.class})
 public class MediaTweet extends BaseModel {
 
+    @PrimaryKey
+    @Column
     Long id;
+
+    @Column
     Long tweetUid;
+
+    @Column
     String displayUrl;
+
+    @Column
     String expandedUrl;
+
+    @Column
     String mediaUrl;
+
+    @Column
     String type;
 
     public MediaTweet() {
