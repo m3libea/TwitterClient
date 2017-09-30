@@ -95,8 +95,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 user = User.fromJSON(response);
-                //TODO Update toolbar with User image
-
             }
 
             @Override

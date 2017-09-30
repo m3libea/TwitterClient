@@ -39,10 +39,13 @@ public class ComposeFragment extends DialogFragment {
     FragmentComposeBinding binding;
     String body;
     User user;
+    String username;
+
 
     public interface ComposeDialogListener {
         void onFinishingTweet(String body, Boolean tweet);
     }
+
     public ComposeFragment() {
 
     }
@@ -64,6 +67,14 @@ public class ComposeFragment extends DialogFragment {
         return fragment;
     }
 
+    public static ComposeFragment newInstance(String username) {
+        ComposeFragment fragment = new ComposeFragment();
+        Bundle args = new Bundle();
+        args.putString("username", username);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +84,7 @@ public class ComposeFragment extends DialogFragment {
 
         body = (String) getArguments().get("body");
         user = Parcels.unwrap(getArguments().getParcelable("user"));
+        username = (String) getArguments().get("username");
 
         return binding.getRoot();
     }
@@ -120,6 +132,12 @@ public class ComposeFragment extends DialogFragment {
             binding.btnDraft.setOnClickListener(view13 -> getDraft(pref, maxTweetChar));
         }
 
+        //Check if user for reply
+
+        if (username != null){
+            binding.tvReply.setText("Replying to " + username);
+            binding.tvReply.setVisibility(View.VISIBLE);
+        }
 
         //Listener for buttons
         binding.btnTweet.setOnClickListener(view1 -> postTweet());

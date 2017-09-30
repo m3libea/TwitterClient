@@ -12,18 +12,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by m3libea on 3/26/17.
  */
 
-@Parcel
+@Parcel(analyze={Tweet.class})
 public class Tweet {
     public String body;
     public long uid;
     public User user;
     public String createdAt;
+    public Boolean retweeted;
+    Integer rtCount = 0;
+    public Boolean favorited;
+    Integer fCount = 0;
+
+    List<MediaTweet> media;
 
     public Tweet() {
     }
@@ -51,6 +58,24 @@ public class Tweet {
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.uid = jsonObject.getLong("id");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.retweeted = jsonObject.getBoolean("retweeted");
+            if(!jsonObject.isNull("retweet_count")) {
+                tweet.rtCount = jsonObject.getInt("retweet_count");
+            }
+            tweet.favorited = jsonObject.getBoolean("favorited");
+            if(!jsonObject.isNull("favourites_count")) {
+                tweet.fCount = jsonObject.getInt("favourites_count");
+            }
+            if(!jsonObject.isNull("entities")) {
+                JSONObject entitiesObj = jsonObject.getJSONObject("entities");
+                if(!entitiesObj.isNull("media")) {
+                    List<MediaTweet> media = MediaTweet.fromJSONArray(entitiesObj.getJSONArray("media"));
+                    for (MediaTweet m : media) {
+                        m.tweetUid = tweet.getUid();
+                    }
+                    tweet.media = media;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

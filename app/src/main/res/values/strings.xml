@@ -18,6 +18,7 @@
     <string name="cancel">Cancel</string>
     <string name="toastDraftSaved">Draft saved</string>
     <string name="toastDraftNoSaved">Tweet not saved</string>
+    <string name="toastTweetCreated">Tweet replied</string>
 
 
 </resources>

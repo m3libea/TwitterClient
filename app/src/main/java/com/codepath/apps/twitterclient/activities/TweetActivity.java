@@ -3,10 +3,13 @@ package com.codepath.apps.twitterclient.activities;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -14,12 +17,18 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTweetBinding;
+import com.codepath.apps.twitterclient.fragments.ComposeFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
-public class TweetActivity extends AppCompatActivity {
+import cz.msebera.android.httpclient.Header;
 
+public class TweetActivity extends AppCompatActivity implements ComposeFragment.ComposeDialogListener{
+
+    private final String TAG = "TweetActivity";
     private TwitterClient client;
     private Tweet tweet;
     ActivityTweetBinding binding;
@@ -56,6 +65,16 @@ public class TweetActivity extends AppCompatActivity {
                         binding.ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+
+        binding.btReply.setOnClickListener(view -> composeReply());
+    }
+
+    private void composeReply() {
+        binding.btReply.setOnClickListener(view -> {
+            FragmentManager fm = getSupportFragmentManager();
+            ComposeFragment tweetCompose = ComposeFragment.newInstance(tweet.getUser().getScreenName());
+            tweetCompose.show(fm, "fragment_compose");
+        });
     }
 
     private void setupActionBar() {
@@ -73,5 +92,23 @@ public class TweetActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFinishingTweet(String body, Boolean tweet) {
+        String minBody = body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length), body.length()));
+        client.composeReply(this.tweet.getUser().getScreenName(), this.tweet.getUid(), minBody, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, "Tweet created: " + response.toString());
+                Toast toast = Toast.makeText(TweetActivity.this, R.string.toastTweetCreated, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+            }
+        });
     }
 }
