@@ -1,10 +1,14 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +26,7 @@ import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,11 +59,9 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         fm = getSupportFragmentManager();
 
         tweets = new ArrayList<>();
-
-        getUser();
         setupView();
 
-        populateTimeline(1, -1);
+        getTimeline();
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -75,6 +78,21 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             }
         }
 
+    }
+
+    private void getTimeline() {
+        if (isNetworkAvailable()){
+            populateTimeline(1, -1);
+            getUser();
+
+        }else{
+            tweets.addAll(SQLite.select().from(Tweet.class).queryList());
+            aTweets.notifyDataSetChanged();
+
+            Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG)
+                    .setAction("Retry", v -> getTimeline());
+            bar.show();
+        }
     }
 
     private void composeTweet(String titleOfPage, String urlOfPage) {
@@ -128,7 +146,12 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         listener = new EndlessRecyclerViewScrollListener(lyManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
+                if (isNetworkAvailable()){
+                    populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
+                }else{
+                    Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_SHORT);
+                    bar.show();
+                }
             }
         };
 
@@ -141,7 +164,13 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         //Refresh action
         binding.swipeContainer.setOnRefreshListener(() -> {
             Log.d("TAG", "Refresh");
-            refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
+            if(isNetworkAvailable()){
+                refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
+            }else{
+                Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG);
+                bar.show();
+                binding.swipeContainer.setRefreshing(false);
+            }
 
         });
         binding.swipeContainer.setColorSchemeResources(R.color.primary,
@@ -185,28 +214,40 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         });
     }
 
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
     @Override
     public void onFinishingTweet(String body, Boolean tweet) {
         if (tweet){
-            client.composeTweet(body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length),
-                    body.length())),
-                    new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            if (isNetworkAvailable()) {
+                client.composeTweet(body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length),
+                        body.length())),
+                        new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                        Tweet tweet = Tweet.fromJSON(response);
-                        tweets.add(0, tweet);
-                        aTweets.notifyDataSetChanged();
-                        binding.rvTweets.scrollToPosition(0);
-                        Log.d(TAG, "Create Tweet: " + response.toString());
+                                Tweet tweet = Tweet.fromJSON(response);
+                                tweets.add(0, tweet);
+                                aTweets.notifyDataSetChanged();
+                                binding.rvTweets.scrollToPosition(0);
+                                Log.d(TAG, "Create Tweet: " + response.toString());
 
-                    }
+                            }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Log.d(TAG, errorResponse.toString());
-                    }
-            });
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                Log.d(TAG, errorResponse.toString());
+                            }
+                        });
+            }else{
+                Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG);
+                bar.show();
+            }
+
         }else{
             if (body!= null){
                 //Save draft on Sharedpreferences

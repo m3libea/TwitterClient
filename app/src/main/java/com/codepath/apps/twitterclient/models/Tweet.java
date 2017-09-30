@@ -2,6 +2,15 @@ package com.codepath.apps.twitterclient.models;
 
 import android.text.format.DateUtils;
 
+import com.codepath.apps.twitterclient.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,15 +28,34 @@ import java.util.Locale;
  * Created by m3libea on 3/26/17.
  */
 
+@Table(database = MyDatabase.class)
 @Parcel(analyze={Tweet.class})
-public class Tweet {
+public class Tweet extends BaseModel{
+
+    @PrimaryKey
+    @Column
     public String body;
-    public long uid;
+
+    @Column
+    public Long uid;
+
+    @ForeignKey(tableClass = User.class)
+    @Column
     public User user;
+
+    @Column
     public String createdAt;
+
+    @Column
     public Boolean retweeted;
+
+    @Column
     Integer rtCount = 0;
+
+    @Column
     public Boolean favorited;
+
+    @Column
     Integer fCount = 0;
 
     List<MediaTweet> media;
@@ -42,6 +70,7 @@ public class Tweet {
     public String getBody() {
         return body;
     }
+
 
     public User getUser() {
         return user;
@@ -91,6 +120,7 @@ public class Tweet {
                 JSONObject tweetObjet = jsonArray.getJSONObject(i);
                 Tweet tweet = fromJSON(tweetObjet);
                 if(tweet != null ){
+                    tweet.persistTweet();
                     tweets.add(tweet);
                 }
             } catch (JSONException e) {
@@ -102,6 +132,16 @@ public class Tweet {
         return tweets;
     }
 
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "media")
+    public List<MediaTweet> getMedia() {
+        if (media == null || media.isEmpty()) {
+            media = SQLite.select()
+                    .from(MediaTweet.class)
+                    .where(MediaTweet_Table.tweetUid.eq(uid))
+                    .queryList();
+        }
+        return media;
+    }
     public String getRelativeTimeAgo() {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -142,6 +182,16 @@ public class Tweet {
         }
 
         return url;
+    }
+
+    public void persistTweet() {
+        this.getUser().save();
+        if (!this.getMedia().isEmpty()) {
+            for(MediaTweet m: this.getMedia()) {
+                m.save();
+            }
+        }
+        this.save();
     }
 
 }
