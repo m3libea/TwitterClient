@@ -47,7 +47,8 @@ The following **additional** features are implemented:
 
 * [X] [Retrolambda](https://github.com/evant/gradle-retrolambda)
 * [X] Relative time format like Twitter
-* [X] Rounded profiles images
+* [X] Logout button
+* [X] User profile actovity
 
 ## Video Walkthrough
 
