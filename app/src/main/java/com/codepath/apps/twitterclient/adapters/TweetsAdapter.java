@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.activities.TweetActivity;
+import com.codepath.apps.twitterclient.activities.UserActivity;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.MediaTweet;
 import com.codepath.apps.twitterclient.models.Tweet;
@@ -69,6 +70,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 context.startActivity(i);
             });
 
+            binding.ivProfile.setOnClickListener(view -> {
+                Intent i = new Intent(context, UserActivity.class);
+                i.putExtra("user", Parcels.wrap(tweet.user));
+                context.startActivity(i);
+            });
+
+            //Set Media
             MediaTweet m = tweet.getOneMedia();
             if(m != null){
 

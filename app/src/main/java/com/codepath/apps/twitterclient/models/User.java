@@ -41,6 +41,9 @@ public class User extends BaseModel{
     public Integer followers;
 
     @Column
+    public String location;
+
+    @Column
     public String description;
 
     public User() {
@@ -78,6 +81,10 @@ public class User extends BaseModel{
         return description;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
     public static User fromJSON(JSONObject jsonObject){
         User u = new User();
 
@@ -90,6 +97,7 @@ public class User extends BaseModel{
             u.followers = jsonObject.getInt("followers_count");
             u.following = jsonObject.getInt("friends_count");
             u.description = jsonObject.getString("description");
+            u.location = jsonObject.getString("location");
             if (!jsonObject.isNull("profile_banner_url")) {
                 u.profileBannerURL = jsonObject.getString("profile_banner_url");
             }

@@ -26,4 +26,7 @@
     <string name="action_logout">Log out</string>
     <string name="dialog_logout">Do you want to log out?</string>
     <string name="dialog_title_logout">Log out</string>
+    <string name="example_location">San Francisco, CA</string>
+    <string name="example_followers">459 followers</string>
+    <string name="example_following">432 following</string>
 </resources>
