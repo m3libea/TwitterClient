@@ -29,4 +29,6 @@
     <string name="example_location">San Francisco, CA</string>
     <string name="example_followers">459 followers</string>
     <string name="example_following">432 following</string>
+    <string name="example_rt">13,9</string>
+    <string name="example_lk">4</string>
 </resources>

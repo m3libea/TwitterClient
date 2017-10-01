@@ -89,8 +89,65 @@
                     android:visibility="visible"
                     android:layout_height="@dimen/dp200" />
             </FrameLayout>
+            <LinearLayout
+                android:id="@+id/llRTL"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/viewt"
+                android:layout_marginTop="@dimen/dp5"
+                android:layout_marginBottom="@dimen/dp5"
+                android:gravity="left">
 
+                <Button
+                    android:id="@+id/btReply"
+                    android:layout_width="@dimen/dp20"
+                    android:layout_height="@dimen/dp16"
+                    android:background="@drawable/ic_twitter_reply_outline"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+                <Button
+                    android:id="@+id/btRt"
+                    android:layout_width="@dimen/dp20"
+                    android:layout_height="@dimen/dp16"
+                    android:background="@drawable/ic_twitter_retweet"
+                    android:layout_marginRight="@dimen/dp5"/>
+                <TextView
+                    android:id="@+id/tvRT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{tweet.RTCount}"
+                    android:textColor="@color/lightText"
+                    android:textSize="@dimen/dp15"
+                    tools:text="@string/example_rt" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+                <Button
+                    android:id="@+id/btLike"
+                    android:layout_width="@dimen/dp20"
+                    android:layout_height="@dimen/dp16"
+                    android:layout_marginRight="@dimen/dp5"
+                    android:background="@drawable/ic_twitter_like_outline"/>
+                <TextView
+                    android:id="@+id/tvLikes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/dp15"
+                    android:textColor="@color/lightText"
+                    android:text="@{tweet.liked}"
+                    tools:text="@string/example_lk"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </layout>
