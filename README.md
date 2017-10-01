@@ -52,15 +52,13 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's a walkthrough of implemented user stories and extras:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+[Video Walkthrough](https://www.dropbox.com/s/9ruansk4bhkxion/device-2017-10-01-140614.mp4?dl=0)
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Some ToDos pendings for next submission.
 
 ## Open-source libraries used
 
