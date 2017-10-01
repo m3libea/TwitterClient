@@ -234,4 +234,12 @@ public class Tweet extends BaseModel{
         this.save();
     }
 
+    public String getRTCount(){
+        return rtCount > 0 ? rtCount.toString() : "0";
+    }
+
+    public String getLiked(){
+        return fCount > 0 ? fCount.toString() : "0";
+    }
+
 }

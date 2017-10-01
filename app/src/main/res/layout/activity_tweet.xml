@@ -4,149 +4,201 @@
     <data>
         <variable name="tweet" type="com.codepath.apps.twitterclient.models.Tweet"/>
     </data>
-    <LinearLayout
-        android:orientation="vertical"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/activity_tweet"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.codepath.apps.twitterclient.activities.TweetActivity">
-
-        <include
-            layout="@layout/toolbar_main"
-            android:id="@+id/included"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/activity_tweet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            tools:context="com.codepath.apps.twitterclient.activities.TweetActivity">
+
+            <include
+                layout="@layout/toolbar_main"
+                android:id="@+id/included"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp15">
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="@dimen/dp50"
-                android:layout_height="@dimen/dp50"
-                tools:src="@drawable/ic_twitter"
-                android:tint="@color/primary"
-                android:layout_marginRight="@dimen/dp10"/>
-            <LinearLayout
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toRightOf="@id/ivProfile"
-                android:gravity="center_vertical"
-                android:id="@+id/llInfo">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvScreenname"
-                    tools:text="Rocio Romero"
-                    android:text="@{tweet.user.screenName}"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_dark"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvUsername"
-                    android:text="@{`@` + tweet.user.name}"
-                    android:textColor="@color/lightText"
-                    tools:text="@string/example_username"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/tvBody"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/llInfo"
-                android:layout_marginTop="@dimen/dp20"
-                android:layout_marginBottom="@dimen/dp20"
-                android:textSize="@dimen/dp24"
-                android:text="@{tweet.body}"
-                android:autoLink="all"
-                tools:text="@string/example_body"/>
-
-            <FrameLayout
-                android:id="@+id/flMedia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp5"
-                android:maxHeight="@dimen/dp200"
-                android:layout_below="@id/tvBody"
-                android:background="@color/background">
+                android:layout_margin="@dimen/dp15">
                 <ImageView
-                    android:id="@+id/ivMedia"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:maxHeight="@dimen/dp200"
-                    android:visibility="gone"
+                    android:id="@+id/ivProfile"
+                    android:layout_width="@dimen/dp50"
+                    android:layout_height="@dimen/dp50"
+                    tools:src="@drawable/ic_twitter"
+                    android:tint="@color/primary"
+                    android:layout_marginRight="@dimen/dp10"/>
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/ivProfile"
+                    android:gravity="center_vertical"
+                    android:id="@+id/llInfo">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tvScreenname"
+                        tools:text="Rocio Romero"
+                        android:text="@{tweet.user.screenName}"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_dark"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tvUsername"
+                        android:text="@{`@` + tweet.user.name}"
+                        android:textColor="@color/lightText"
+                        tools:text="@string/example_username"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:src="@mipmap/ic_launcher"
-                    android:layout_margin="@dimen/dp5"/>
+                    android:layout_below="@+id/llInfo"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:layout_marginBottom="@dimen/dp20"
+                    android:textSize="@dimen/dp24"
+                    android:text="@{tweet.body}"
+                    android:autoLink="all"
+                    tools:text="@string/example_body"/>
 
-                <VideoView
-                    android:id="@+id/vvVideo"
+                <FrameLayout
+                    android:id="@+id/flMedia"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content" />
-            </FrameLayout>
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="@string/example_date_format"
-                android:layout_below="@+id/flMedia"
-                android:text='@{tweet.formattedDate}'
-                android:textColor="@color/lightText"/>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvDate"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/dp20"
-                android:layout_marginLeft="@dimen/dp10"
-                android:layout_marginRight="@dimen/dp10">
-                <Button
-                    android:id="@+id/btReply"
-                    android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp20"
-                    android:background="@drawable/ic_twitter_reply_outline"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
-                <Button
-                    android:id="@+id/btRt"
-                    android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp20"
-                    android:background="@drawable/ic_twitter_retweet"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
-                <Button
-                    android:id="@+id/btLike"
-                    android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp20"
-                    android:background="@drawable/ic_twitter_like_outline"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
-                <Button
-                    android:id="@+id/btMessage"
-                    android:layout_width="@dimen/dp24"
-                    android:layout_height="@dimen/dp20"
-                    android:background="@drawable/ic_twitter_newmessage"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp5"
+                    android:maxHeight="@dimen/dp200"
+                    android:layout_below="@id/tvBody"
+                    android:background="@color/background">
+                    <ImageView
+                        android:id="@+id/ivMedia"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:maxHeight="@dimen/dp200"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:src="@mipmap/ic_launcher"
+                        android:layout_margin="@dimen/dp5"/>
 
-        </RelativeLayout>
+                    <VideoView
+                        android:id="@+id/vvVideo"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content" />
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/example_date_format"
+                    android:layout_below="@+id/flMedia"
+                    android:text='@{tweet.formattedDate}'
+                    android:textColor="@color/lightText"
+                    android:layout_marginBottom="@dimen/dp10"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:id="@+id/viewt"
+                    android:layout_height="1dp"
+                    android:background="@color/separators"
+                    android:layout_below="@id/tvDate"/>
+                <LinearLayout
+                    android:id="@+id/llRTL"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/viewt"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:layout_marginBottom="@dimen/dp5"
+                    android:gravity="left">
 
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvRT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{tweet.RTCount + ` Retweets`}"
+                        android:textColor="@color/primary"
+                        android:textSize="@dimen/dp15"
+                        tools:text="@string/example_following" />
+                    <TextView
+                        android:id="@+id/tvLikes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp20"
+                        android:textSize="@dimen/dp15"
+                        android:textColor="@color/primary"
+                        android:text="@{tweet.liked + ` Likes`}"
+                        tools:text="@string/example_followers"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:id="@+id/viewm"
+                    android:layout_height="1dp"
+                    android:background="@color/separators"
+                    android:layout_below="@id/llRTL"/>
+                <LinearLayout
+                    android:id="@+id/llButtons"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/viewm"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/dp10">
+                    <Button
+                        android:id="@+id/btReply"
+                        android:layout_width="@dimen/dp24"
+                        android:layout_height="@dimen/dp20"
+                        android:background="@drawable/ic_twitter_reply_outline"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
+                    <Button
+                        android:id="@+id/btRt"
+                        android:layout_width="@dimen/dp24"
+                        android:layout_height="@dimen/dp20"
+                        android:background="@drawable/ic_twitter_retweet"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
+                    <Button
+                        android:id="@+id/btLike"
+                        android:layout_width="@dimen/dp24"
+                        android:layout_height="@dimen/dp20"
+                        android:background="@drawable/ic_twitter_like_outline"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
+                    <Button
+                        android:id="@+id/btMessage"
+                        android:layout_width="@dimen/dp24"
+                        android:layout_height="@dimen/dp20"
+                        android:background="@drawable/ic_twitter_newmessage"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:id="@+id/viewb"
+                android:layout_height="1dp"
+                android:background="@color/separators"
+                android:layout_below="@id/llButtons"/>
+
+        </LinearLayout>
+    </ScrollView>
 </layout>

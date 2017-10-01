@@ -1,6 +1,7 @@
 package com.codepath.apps.twitterclient.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -60,6 +61,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
         setupActionBar();
         binding.setTweet(tweet);
 
+        //Profile image
         Glide.with(this)
                 .load(tweet.getUser().getProfileImageURL())
                 .asBitmap()
@@ -74,6 +76,13 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
                     }
                 });
 
+        binding.ivProfile.setOnClickListener(view -> {
+            Intent i = new Intent(this, UserActivity.class);
+            i.putExtra("user", Parcels.wrap(tweet.user));
+            startActivity(i);
+        });
+
+        //Set Media
         MediaTweet m = tweet.getOneMedia();
 
         if(m != null){
