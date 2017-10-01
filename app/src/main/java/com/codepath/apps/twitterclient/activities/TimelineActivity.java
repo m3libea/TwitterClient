@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.twitterclient.R;
@@ -124,11 +128,11 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
     }
 
     private void setupView() {
-        setSupportActionBar(binding.included.toolbar);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        View logo = binding.included.toolbar.getChildAt(0);
+        View logo = binding.toolbar.getChildAt(0);
 
         logo.setOnClickListener(view -> binding.rvTweets.scrollToPosition(0));
 
@@ -264,6 +268,46 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                 Log.d(TAG, "Draft saved " + body);
 
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_toolbar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int menuid = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+
+        switch (menuid) {
+            case R.id.action_logout:
+                //Dialog to ask user if want to logout the tweet on device or not.
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.dialog_logout)
+                        .setTitle(R.string.dialog_title_logout);
+
+                builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+                    client.clearAccessToken();
+                    Intent i = new Intent(this, LoginActivity.class);
+                    startActivity(i);
+
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+
+                });
+
+                builder.create().show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
