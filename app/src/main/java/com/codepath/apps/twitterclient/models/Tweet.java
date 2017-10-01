@@ -80,6 +80,22 @@ public class Tweet extends BaseModel{
         return createdAt;
     }
 
+    public Boolean getRetweeted() {
+        return retweeted;
+    }
+
+    public Integer getRtCount() {
+        return rtCount;
+    }
+
+    public Boolean getFavorited() {
+        return favorited;
+    }
+
+    public Integer getfCount() {
+        return fCount;
+    }
+
     public static Tweet fromJSON(JSONObject jsonObject){
         Tweet tweet = new Tweet();
         try {
@@ -235,11 +251,31 @@ public class Tweet extends BaseModel{
     }
 
     public String getRTCount(){
-        return rtCount > 0 ? rtCount.toString() : "0";
+        String count = null;
+
+        if(rtCount >= 10000){
+            double div = rtCount/10000;
+            count = div + "K";
+        }else if (rtCount > 0){
+            count = rtCount.toString();
+        }else{
+            count = "";
+        }
+        return count;
     }
 
     public String getLiked(){
-        return fCount > 0 ? fCount.toString() : "0";
+        String count = null;
+
+        if(fCount >= 10000){
+            double div = fCount/10000;
+            count = div + "K";
+        }else if (fCount > 0){
+            count = fCount.toString();
+        }else{
+            count = "";
+        }
+        return count;
     }
 
 }

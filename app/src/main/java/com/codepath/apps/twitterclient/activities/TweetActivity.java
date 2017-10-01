@@ -61,6 +61,20 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
         setupActionBar();
         binding.setTweet(tweet);
 
+        if((tweet.getRtCount() == 0) && (tweet.getfCount() == 0)){
+            binding.viewt.setVisibility(View.GONE);
+        }
+
+        if(tweet.getRtCount() == 0){
+            binding.tvRT.setVisibility(View.GONE);
+        }
+
+        if(tweet.getfCount() == 0){
+            binding.tvLikes.setVisibility(View.GONE);
+        }
+
+
+
         //Profile image
         Glide.with(this)
                 .load(tweet.getUser().getProfileImageURL())
