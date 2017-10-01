@@ -66,18 +66,29 @@
                 android:layout_marginTop="@dimen/dp10"
                 android:autoLink="all"
                 tools:text="@string/example_body"
+                android:clickable="false"
+                android:focusable="false"
                 android:id="@+id/tvBody"/>
-            <ImageView
-                android:id="@+id/ivMedia"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:maxHeight="@dimen/dp200"
-                android:visibility="gone"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:src="@mipmap/ic_launcher"
-                android:layout_margin="@dimen/dp5"/>
+                android:layout_margin="@dimen/dp5"
+                android:maxHeight="@dimen/dp200">
+                <ImageView
+                    android:id="@+id/ivMedia"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:src="@mipmap/ic_launcher"
+                    android:visibility="gone"/>
 
+                <VideoView
+                    android:id="@+id/vvVideo"
+                    android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_height="@dimen/dp200" />
+            </FrameLayout>
 
         </LinearLayout>
 

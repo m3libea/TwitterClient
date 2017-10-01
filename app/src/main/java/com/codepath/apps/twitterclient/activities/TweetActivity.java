@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -23,6 +24,7 @@ import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTweetBinding;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
+import com.codepath.apps.twitterclient.models.MediaTweet;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -72,17 +74,56 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
                     }
                 });
 
-        if(tweet.getOneMedia()!= null){
-            int radius = 20;
-            int margin = 5;
-            Glide.with(this)
-                    .load(tweet.getOneMedia())
-                    .bitmapTransform(new RoundedCornersTransformation(this, radius, margin))
-                    .into(binding.ivMedia);
-            binding.ivMedia.setVisibility(View.VISIBLE);
+        MediaTweet m = tweet.getOneMedia();
+
+        if(m != null){
+            if (m.getType().equals("photo")) {
+
+                Glide.with(this)
+                        .load(m.getMediaUrl())
+                        .bitmapTransform(new RoundedCornersTransformation(this, 20, 5))
+                        .into(binding.ivMedia);
+                binding.ivMedia.setVisibility(View.VISIBLE);
+            }else {
+                setVideo(m.getVideoURL());
+
+                binding.vvVideo.setVisibility(View.VISIBLE);
+            }
+
         }
 
         binding.btReply.setOnClickListener(view -> composeReply());
+    }
+
+    private void setVideo(String url) {
+        binding.vvVideo.setVideoPath(url);
+
+        final boolean[] videoTouched = {false};
+
+        binding.vvVideo.setOnPreparedListener(mp -> mp.setLooping(true));
+
+        Handler mHandler = new Handler();
+
+        binding.vvVideo.setOnTouchListener((view, motionEvent) -> {
+            if(!videoTouched[0]) {
+                videoTouched[0] = true;
+            }
+            if (binding.vvVideo.isPlaying()) {
+                binding.vvVideo.pause();
+            } else {
+                binding.vvVideo.start();
+            }
+            mHandler.postDelayed(() -> videoTouched[0] = false, 100);
+            return true;
+        });
+        binding.vvVideo.setOnErrorListener((media, what, extra) -> {
+            if (what == 100)
+            {
+                binding.vvVideo.stopPlayback();
+                setVideo(url);
+            }
+            return true;
+        });
     }
 
     private void composeReply() {

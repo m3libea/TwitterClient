@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.activities.TweetActivity;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
+import com.codepath.apps.twitterclient.models.MediaTweet;
 import com.codepath.apps.twitterclient.models.Tweet;
 
 import org.parceler.Parcels;
@@ -67,21 +69,63 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 context.startActivity(i);
             });
 
-            if(tweet.getOneMedia()!= null){
-                int radius = 20;
-                int margin = 5;
-                Glide.with(getContext())
-                        .load(tweet.getOneMedia())
-                        .bitmapTransform(new RoundedCornersTransformation(getContext(), radius, margin))
-                        .into(binding.ivMedia);
-                binding.ivMedia.setVisibility(View.VISIBLE);
+            MediaTweet m = tweet.getOneMedia();
+            if(m != null){
+
+                if (m.getType().equals("photo")) {
+                    Glide.with(getContext())
+                            .load(m.getMediaUrl())
+                            .bitmapTransform(new RoundedCornersTransformation(getContext(), 20, 5))
+                            .into(binding.ivMedia);
+                    binding.ivMedia.setVisibility(View.VISIBLE);
+                    binding.vvVideo.setVisibility(View.GONE);
+                }else{
+                    binding.vvVideo.setVisibility(View.VISIBLE);
+                    setVideo(m.getVideoURL());
+                    binding.ivMedia.setVisibility(View.GONE);
+                }
+
 
             }else{
                 binding.ivMedia.setVisibility(View.GONE);
+                binding.vvVideo.setVisibility(View.GONE);
             }
 
         }
+
+        private void setVideo(String url) {
+            binding.vvVideo.setVideoPath(url);
+
+            final boolean[] videoTouched = {false};
+
+            binding.vvVideo.setOnPreparedListener(mp -> mp.setLooping(true));
+
+            Handler mHandler = new Handler();
+
+            binding.vvVideo.setOnTouchListener((view, motionEvent) -> {
+                if(!videoTouched[0]) {
+                    videoTouched[0] = true;
+                }
+                if (binding.vvVideo.isPlaying()) {
+                    binding.vvVideo.pause();
+                } else {
+                    binding.vvVideo.start();
+                }
+                mHandler.postDelayed(() -> videoTouched[0] = false, 200);
+                return true;
+            });
+            binding.vvVideo.setOnErrorListener((media, what, extra) -> {
+                if (what == 100)
+                {
+                    binding.vvVideo.stopPlayback();
+                    setVideo(url);
+                }
+                return true;
+            });
+        }
     }
+
+
 
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;

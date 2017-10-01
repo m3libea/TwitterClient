@@ -105,6 +105,16 @@ public class Tweet extends BaseModel{
                     tweet.media = media;
                 }
             }
+            if(!jsonObject.isNull("extended_entities")) {
+                JSONObject entitiesObj = jsonObject.getJSONObject("extended_entities");
+                if(!entitiesObj.isNull("media")) {
+                    List<MediaTweet> media = MediaTweet.fromJSONArray(entitiesObj.getJSONArray("media"));
+                    for (MediaTweet m : media) {
+                        m.tweetUid = tweet.getUid();
+                    }
+                    tweet.media = media;
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -196,13 +206,22 @@ public class Tweet extends BaseModel{
         return formattedDate;
     }
 
-    public String getOneMedia() {
-        String url = null;
+    public MediaTweet getOneMedia() {
+        MediaTweet m = null;
+
         if (media != null && !media.isEmpty()) {
-            url = media.get(0).getMediaUrl();
+
+            MediaTweet video= null;
+            for (MediaTweet e : media){
+                if (e.getType().equals("video")){
+                    video =  e;
+                }
+            }
+
+            m = video != null? video : media.get(0);
         }
 
-        return url;
+        return m;
     }
 
     public void persistTweet() {

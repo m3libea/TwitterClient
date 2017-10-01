@@ -39,6 +39,9 @@ public class MediaTweet extends BaseModel {
     @Column
     String type;
 
+    @Column
+    String videoURL;
+
     public MediaTweet() {
     }
 
@@ -62,6 +65,10 @@ public class MediaTweet extends BaseModel {
         return type;
     }
 
+    public String getVideoURL() {
+        return videoURL;
+    }
+
     public static MediaTweet fromJSON(JSONObject jsonObject) {
         MediaTweet media = new MediaTweet();
 
@@ -71,6 +78,11 @@ public class MediaTweet extends BaseModel {
             media.expandedUrl = jsonObject.getString("expanded_url");
             media.mediaUrl = jsonObject.getString("media_url");
             media.type = jsonObject.getString("type");
+
+            if (!jsonObject.isNull("video_info")){
+                media.videoURL = jsonObject.getJSONObject("video_info").getJSONArray("variants").getJSONObject(0).getString("url");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

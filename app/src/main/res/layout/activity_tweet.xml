@@ -66,23 +66,38 @@
                 android:text="@{tweet.body}"
                 android:autoLink="all"
                 tools:text="@string/example_body"/>
-            <ImageView
-                android:id="@+id/ivMedia"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:maxHeight="@dimen/dp200"
-                android:visibility="gone"
+
+            <FrameLayout
+                android:id="@+id/flMedia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:src="@mipmap/ic_launcher"
                 android:layout_margin="@dimen/dp5"
-                android:layout_below="@id/tvBody"/>
+                android:maxHeight="@dimen/dp200"
+                android:layout_below="@id/tvBody"
+                android:background="@color/background">
+                <ImageView
+                    android:id="@+id/ivMedia"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="@dimen/dp200"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:src="@mipmap/ic_launcher"
+                    android:layout_margin="@dimen/dp5"/>
+
+                <VideoView
+                    android:id="@+id/vvVideo"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/example_date_format"
-                android:layout_below="@+id/ivMedia"
+                android:layout_below="@+id/flMedia"
                 android:text='@{tweet.formattedDate}'
                 android:textColor="@color/lightText"/>
             <LinearLayout

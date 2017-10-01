@@ -33,35 +33,27 @@ android {
 def dbflow_version = "4.0.0-beta5"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-
-
+    compile fileTree(include: '*.jar', dir: 'libs')
     // Android Async Http for sending async network requests
-    compile 'com.loopj.android:android-async-http:1.4.9'
-
     // DBFlow for simple persistence with an ORM
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
     //Recyclerview
-
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-
     //Parceler
-
-    compile 'org.parceler:parceler-api:1.1.6'
-    annotationProcessor 'org.parceler:parceler:1.1.6'
-
     //Glide
-
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'org.parceler:parceler-api:1.1.6'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
 }
 
 buildscript {
