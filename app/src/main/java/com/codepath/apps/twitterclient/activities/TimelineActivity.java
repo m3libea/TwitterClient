@@ -35,6 +35,7 @@ import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -207,12 +208,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int menuid = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
 
         switch (menuid) {
             case R.id.action_logout:
@@ -233,6 +231,11 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
                 builder.create().show();
                 return true;
+            case R.id.action_profile:
+                Intent i = new Intent(this, UserActivity.class);
+                i.putExtra("user", Parcels.wrap(user));
+                startActivity(i);
+
             default:
                 return super.onOptionsItemSelected(item);
         }

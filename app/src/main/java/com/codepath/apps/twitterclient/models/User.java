@@ -46,6 +46,12 @@ public class User extends BaseModel{
     @Column
     public String description;
 
+    @Column
+    public Integer statusesCount;
+
+    @Column
+    public Boolean verified;
+
     public User() {
     }
 
@@ -98,6 +104,8 @@ public class User extends BaseModel{
             u.following = jsonObject.getInt("friends_count");
             u.description = jsonObject.getString("description");
             u.location = jsonObject.getString("location");
+            u.statusesCount = jsonObject.getInt("statuses_count");
+            u.verified = jsonObject.getBoolean("verified");
             if (!jsonObject.isNull("profile_banner_url")) {
                 u.profileBannerURL = jsonObject.getString("profile_banner_url");
             }
