@@ -29,19 +29,11 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swipeContainer"
+        <FrameLayout
+            android:id="@+id/fmTimeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTweets"
-                android:layout_width="wrap_content"
-                android:clipToPadding="false"
-                android:layout_height="536dp" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/faCompose"
@@ -51,7 +43,7 @@
             app:fabSize="normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/rvTweets"
+            app:layout_anchor="@id/fmTimeline"
             app:layout_anchorGravity="bottom|right"/>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

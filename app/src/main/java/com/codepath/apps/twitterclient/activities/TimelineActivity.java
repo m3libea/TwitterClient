@@ -12,8 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,36 +20,29 @@ import android.view.View;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
-import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
-import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
+import com.codepath.apps.twitterclient.fragments.HometimelineFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
-import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity  implements ComposeFragment.ComposeDialogListener{
+public class TimelineActivity extends AppCompatActivity implements ComposeFragment.ComposeDialogListener{
 
     private final String TAG = "Timeline";
-    private TwitterClient client;
-    private TweetsAdapter aTweets;
-    private EndlessRecyclerViewScrollListener listener;
-
-    private ArrayList<Tweet> tweets;
     private User user;
+
+    private TwitterClient client;
 
     ActivityTimelineBinding binding;
     FragmentManager fm;
+
+    HometimelineFragment hometimelineFragment;
 
 
     @Override
@@ -63,10 +54,13 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         fm = getSupportFragmentManager();
 
-        tweets = new ArrayList<>();
+        hometimelineFragment = new HometimelineFragment();
+
+        fm.beginTransaction().add(R.id.fmTimeline, hometimelineFragment).commit();
+
         setupView();
 
-        getTimeline();
+        getUser();
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -83,21 +77,6 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             }
         }
 
-    }
-
-    private void getTimeline() {
-        if (isNetworkAvailable()){
-            populateTimeline(1, -1);
-            getUser();
-
-        }else{
-            tweets.addAll(SQLite.select().from(Tweet.class).queryList());
-            aTweets.notifyDataSetChanged();
-
-            Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG)
-                    .setAction("Retry", v -> getTimeline());
-            bar.show();
-        }
     }
 
     private void composeTweet(String titleOfPage, String urlOfPage) {
@@ -134,9 +113,7 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
 
         View logo = binding.toolbar.getChildAt(0);
 
-        logo.setOnClickListener(view -> binding.rvTweets.scrollToPosition(0));
-
-        setRecyclerView();
+        logo.setOnClickListener(view -> hometimelineFragment.binding.rvTweets.scrollToPosition(0));
 
         binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();
@@ -145,90 +122,10 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
         });
     }
 
-    private void setRecyclerView() {
-        aTweets = new TweetsAdapter(this, tweets);
-        binding.rvTweets.setAdapter(aTweets);
-        LinearLayoutManager lyManager = new LinearLayoutManager(this);
-        binding.rvTweets.setLayoutManager(lyManager);
 
-        //Infinite scroll
-        listener = new EndlessRecyclerViewScrollListener(lyManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (isNetworkAvailable()){
-                    populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
-                }else{
-                    Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_SHORT);
-                    bar.show();
-                }
-            }
-        };
 
-        binding.rvTweets.addOnScrollListener(listener);
+   // MOVE TO Twitter fragment
 
-        //Line between rows
-        TweetDividerDecoration line = new TweetDividerDecoration(this);
-        binding.rvTweets.addItemDecoration(line);
-
-        //Refresh action
-        binding.swipeContainer.setOnRefreshListener(() -> {
-            Log.d("TAG", "Refresh");
-            if(isNetworkAvailable()){
-                refreshTimeline(tweets.isEmpty() ? 1 : tweets.get(0).getUid(), -1);
-            }else{
-                Snackbar bar = Snackbar.make(findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG);
-                bar.show();
-                binding.swipeContainer.setRefreshing(false);
-            }
-
-        });
-        binding.swipeContainer.setColorSchemeResources(R.color.primary,
-                R.color.primary_dark,
-                R.color.twitterLight,
-                R.color.accent);
-
-    }
-
-    private void refreshTimeline(long sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d(TAG, "Refresh tweets: " + response.toString());
-
-                tweets.addAll(0,Tweet.fromJSONArray(response));
-                aTweets.notifyDataSetChanged();
-                binding.swipeContainer.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, errorResponse.toString());
-            }
-        });
-    }
-    private void populateTimeline(int sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d(TAG, "Populate tweets: " + response.toString());
-
-                tweets.addAll(Tweet.fromJSONArray(response));
-                aTweets.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, errorResponse.toString());
-            }
-        });
-    }
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
     @Override
     public void onFinishingTweet(String body, Boolean tweet) {
         if (tweet){
@@ -240,9 +137,9 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                                 Tweet tweet = Tweet.fromJSON(response);
-                                tweets.add(0, tweet);
-                                aTweets.notifyDataSetChanged();
-                                binding.rvTweets.scrollToPosition(0);
+
+                                hometimelineFragment.addFront(tweet);
+
                                 Log.d(TAG, "Create Tweet: " + response.toString());
 
                             }
@@ -309,5 +206,11 @@ public class TimelineActivity extends AppCompatActivity  implements ComposeFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }
