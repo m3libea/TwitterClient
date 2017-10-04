@@ -16,14 +16,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.adapters.TimelineFragmentPagerAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
 import com.codepath.apps.twitterclient.fragments.HometimelineFragment;
+import com.codepath.apps.twitterclient.fragments.MentionsFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -43,6 +44,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
     FragmentManager fm;
 
     HometimelineFragment hometimelineFragment;
+    MentionsFragment mentionsFragment;
 
 
     @Override
@@ -54,9 +56,10 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
         fm = getSupportFragmentManager();
 
-        hometimelineFragment = new HometimelineFragment();
+        //hometimelineFragment = new HometimelineFragment();
+        //mentionsFragment = new MentionsFragment();
 
-        fm.beginTransaction().add(R.id.fmTimeline, hometimelineFragment).commit();
+        //fm.beginTransaction().add(R.id.fmTimeline, mentionsFragment).commit();
 
         setupView();
 
@@ -111,9 +114,14 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        View logo = binding.toolbar.getChildAt(0);
+//        View logo = binding.toolbar.getChildAt(0);
+//
+//        logo.setOnClickListener(view -> hometimelineFragment.binding.rvTweets.scrollToPosition(0));
 
-        logo.setOnClickListener(view -> hometimelineFragment.binding.rvTweets.scrollToPosition(0));
+        binding.viewpager.setAdapter(new TimelineFragmentPagerAdapter(fm));
+
+        // Give the TabLayout the ViewPager
+        binding.slidingTabs.setupWithViewPager(binding.viewpager);
 
         binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();

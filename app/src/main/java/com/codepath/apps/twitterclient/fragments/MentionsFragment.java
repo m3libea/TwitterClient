@@ -26,9 +26,9 @@ import cz.msebera.android.httpclient.Header;
  * Created by m3libea on 10/2/17.
  */
 
-public class HometimelineFragment extends TweetsFragment {
+public class MentionsFragment extends TweetsFragment {
 
-    private final String TAG = "HTLFragment";
+    private final String TAG = "MentionsFragment";
     private TwitterClient client;
 
     private EndlessRecyclerViewScrollListener listener;
@@ -98,7 +98,7 @@ public class HometimelineFragment extends TweetsFragment {
     }
 
     private void populateTimeline(int sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
+        client.getMentions(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, "Populate tweets: " + response.toString());
@@ -115,7 +115,7 @@ public class HometimelineFragment extends TweetsFragment {
 
     //Move to timeline Fragment
     private void refreshTimeline(long sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
+        client.getMentions(sinceId, maxId, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, "Refresh tweets: " + response.toString());
