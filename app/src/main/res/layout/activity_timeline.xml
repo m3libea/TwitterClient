@@ -22,7 +22,13 @@
                 android:layout_height="wrap_content"
                 android:background="@color/textMenus"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                <ImageView
+                    android:layout_width="@dimen/dp24"
+                    android:layout_height="@dimen/dp24"
+                    android:id="@+id/ivProfile"
+                    android:src="@drawable/ic_twitter"/>
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout

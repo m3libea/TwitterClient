@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.adapters.TimelineFragmentPagerAdapter;
@@ -101,6 +106,19 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 user = User.fromJSON(response);
+                Glide.with(TimelineActivity.this)
+                        .load(user.getProfileImageURL())
+                        .asBitmap()
+                        .centerCrop()
+                        .into(new BitmapImageViewTarget(binding.ivProfile) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(TimelineActivity.this.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                binding.ivProfile.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
             }
 
             @Override
@@ -112,7 +130,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
     private void setupView() {
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setLogo(R.drawable.ic_twitter);
+        //getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         View logo = binding.toolbar.getChildAt(0);
