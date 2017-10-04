@@ -13,13 +13,14 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
             <android.support.v7.widget.Toolbar
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="@color/textMenus"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </android.support.design.widget.AppBarLayout>
@@ -35,7 +36,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TwitterTabLayout"
                 android:elevation="@dimen/dp5"
-                android:background="@color/bkGrey"
+                android:background="@color/textMenus"
                 app:tabMode="fixed"/>
 
             <android.support.v4.view.ViewPager

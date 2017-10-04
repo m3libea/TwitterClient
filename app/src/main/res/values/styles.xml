@@ -10,6 +10,7 @@
         <!-- Default color of the text in your views  -->
         <item name="android:textColorPrimary">@color/textPrimary</item>
         <item name="titleTextColor">@color/textMenus</item>
+        <item name="android:colorBackground">@color/textMenus</item>
     </style>
 
     <style name="TwitterTabLayout" parent="Widget.Design.TabLayout">
