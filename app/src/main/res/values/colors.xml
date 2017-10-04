@@ -5,10 +5,11 @@
     <color name="accent">#1dcaff</color>
     <color name="twitterLight">#1dcaff</color>
     <color name="textPrimary">#000000</color>
-    <color name="background">#c0deed</color>
+    <color name="bkground">#c0deed</color>
     <color name="textMenus">#FFFFFF</color>
     <color name="badText">#b71c1c</color>
     <color name="lightText">#AAB8C3</color>
     <color name="separators">#d3e0ea</color>
+    <color name="bkGrey">#eeeeee</color>
 
 </resources>

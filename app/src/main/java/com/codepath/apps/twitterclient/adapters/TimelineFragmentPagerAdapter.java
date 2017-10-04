@@ -3,7 +3,6 @@ package com.codepath.apps.twitterclient.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import com.codepath.apps.twitterclient.fragments.HometimelineFragment;
 import com.codepath.apps.twitterclient.fragments.MentionsFragment;
@@ -28,11 +27,7 @@ public class TimelineFragmentPagerAdapter extends SmartFragmentStatePagerAdapter
     public Fragment getItem(int position) {
 
         Fragment f;
-        Log.d("Adapter", "Get Item " + position);
-
         if (position == 0){
-            Log.d("Adapter", "Hometimeline " + position);
-    
             f = new HometimelineFragment();
         }else if(position == 1){
             f = new MentionsFragment();
@@ -49,7 +44,6 @@ public class TimelineFragmentPagerAdapter extends SmartFragmentStatePagerAdapter
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Log.d("Adapter","Position of the tab " +  position);
-        return tabTitles[position];
+        return null;
     }
 }

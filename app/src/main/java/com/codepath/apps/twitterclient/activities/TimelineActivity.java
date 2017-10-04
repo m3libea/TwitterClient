@@ -3,19 +3,25 @@ package com.codepath.apps.twitterclient.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
@@ -23,8 +29,7 @@ import com.codepath.apps.twitterclient.adapters.TimelineFragmentPagerAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
-import com.codepath.apps.twitterclient.fragments.HometimelineFragment;
-import com.codepath.apps.twitterclient.fragments.MentionsFragment;
+import com.codepath.apps.twitterclient.fragments.TweetsFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -42,9 +47,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
     ActivityTimelineBinding binding;
     FragmentManager fm;
-
-    HometimelineFragment hometimelineFragment;
-    MentionsFragment mentionsFragment;
+    private TimelineFragmentPagerAdapter aPager;
 
 
     @Override
@@ -56,10 +59,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
         fm = getSupportFragmentManager();
 
-        //hometimelineFragment = new HometimelineFragment();
-        //mentionsFragment = new MentionsFragment();
-
-        //fm.beginTransaction().add(R.id.fmTimeline, mentionsFragment).commit();
+        aPager = new TimelineFragmentPagerAdapter(fm);
 
         setupView();
 
@@ -114,14 +114,38 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-//        View logo = binding.toolbar.getChildAt(0);
-//
-//        logo.setOnClickListener(view -> hometimelineFragment.binding.rvTweets.scrollToPosition(0));
+        View logo = binding.toolbar.getChildAt(0);
 
-        binding.viewpager.setAdapter(new TimelineFragmentPagerAdapter(fm));
+        logo.setOnClickListener(view -> {
+            TweetsFragment fm = (TweetsFragment)aPager.getRegisteredFragment(binding.viewpager.getCurrentItem());
+            fm.binding.rvTweets.scrollToPosition(0);
+        });
+
+
+        binding.viewpager.setAdapter(aPager);
 
         // Give the TabLayout the ViewPager
         binding.slidingTabs.setupWithViewPager(binding.viewpager);
+
+        int[] imageResId = {
+                R.drawable.ic_twitter_home,
+                R.drawable.ic_twitter_alert_2};
+        ColorStateList colors;
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            colors = getResources().getColorStateList(R.color.tab_icon, getTheme());
+        }
+        else {
+            colors = getResources().getColorStateList(R.color.tab_icon);
+        }
+
+        for (int i = 0; i < imageResId.length; i++) {
+
+            TabLayout.Tab tab = binding.slidingTabs.getTabAt(i).setIcon(imageResId[i]);
+            Drawable iconWrap = DrawableCompat.wrap(tab.getIcon());
+            DrawableCompat.setTintList(iconWrap, colors);
+            tab.setIcon(iconWrap);
+        }
 
         binding.faCompose.setOnClickListener(view -> {
             FragmentManager fm = getSupportFragmentManager();
@@ -130,9 +154,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         });
     }
 
-
-
-   // MOVE TO Twitter fragment
 
     @Override
     public void onFinishingTweet(String body, Boolean tweet) {
@@ -146,7 +167,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
                                 Tweet tweet = Tweet.fromJSON(response);
 
-                                hometimelineFragment.addFront(tweet);
+                                TweetsFragment fm = (TweetsFragment)aPager.getRegisteredFragment(0);
+                                fm.addFront(tweet);
 
                                 Log.d(TAG, "Create Tweet: " + response.toString());
 
