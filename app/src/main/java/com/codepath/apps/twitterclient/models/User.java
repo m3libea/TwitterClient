@@ -141,11 +141,19 @@ public class User extends BaseModel{
     }
 
     public String getCFollowers() {
-        return coolFormat(followers, 0);
+        if(followers < 10000){
+            return Integer.toString(followers);
+        }else{
+            return coolFormat(followers, 0);
+        }
     }
 
     public String getCFollowing(){
-        return coolFormat(following, 0);
+        if(following < 10000){
+            return Integer.toString(following);
+        }else{
+            return coolFormat(following, 0);
+        }
     }
 
     private static char[] c = new char[]{'K', 'M', 'B', 'T'};
