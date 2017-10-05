@@ -3,6 +3,7 @@ package com.codepath.apps.twitterclient.activities;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityUserBinding;
+import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 
@@ -43,7 +45,6 @@ public class UserActivity extends AppCompatActivity {
 
         setupView();
 
-        //TODO Setup Recyclerview for user timeline
     }
 
     private void setupView() {
@@ -68,10 +69,17 @@ public class UserActivity extends AppCompatActivity {
                 .centerCrop()
                 .into(binding.ivBanner);
 
+        Fragment fragment = UserTimelineFragment.newInstance(user);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fmTimeline, fragment)
+                .commit();
+
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.included.toolbar);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(user.getName());

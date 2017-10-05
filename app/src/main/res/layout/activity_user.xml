@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="user" type="com.codepath.apps.twitterclient.models.User"/>
     </data>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <include
-            layout="@layout/toolbar_main"
-            android:id="@+id/included"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            <android.support.v7.widget.Toolbar
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            app:layout_anchor="@id/appBar"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
             <ImageView
                 android:id="@+id/ivBanner"
                 android:layout_width="match_parent"
@@ -113,14 +128,12 @@
                 android:layout_height="1dp"
                 android:background="@color/separators"
                 android:layout_below="@id/llFollowers"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTweets"
+            <FrameLayout
+                android:id="@+id/fmTimeline"
                 android:layout_width="match_parent"
-                android:clipToPadding="false"
-                android:layout_height="match_parent"
-                android:layout_below="@id/viewl"/>
+                android:layout_below="@id/viewl"
+                android:layout_height="match_parent"/>
 
         </RelativeLayout>
-
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

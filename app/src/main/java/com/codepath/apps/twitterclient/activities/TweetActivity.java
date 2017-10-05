@@ -158,7 +158,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
     }
 
     private void setupActionBar() {
-        setSupportActionBar(binding.included.toolbar);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Tweet");

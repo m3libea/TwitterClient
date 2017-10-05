@@ -116,4 +116,32 @@ public class User extends BaseModel{
         return u;
 
     }
+
+    public String getCFollowers(){
+        String count = null;
+
+        if(followers >= 10000){
+            double div = followers/10000;
+            count = div + "K";
+        }else if (followers > 0){
+            count = followers.toString();
+        }else{
+            count = "";
+        }
+        return count;
+    }
+
+    public String getCFollowing(){
+        String count = null;
+
+        if(following >= 10000){
+            double div = following/10000;
+            count = div + "K";
+        }else if (following > 0){
+            count = following.toString();
+        }else{
+            count = "";
+        }
+        return count;
+    }
 }

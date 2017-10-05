@@ -17,11 +17,12 @@
             android:fitsSystemWindows="true"
             tools:context="com.codepath.apps.twitterclient.activities.TweetActivity">
 
-            <include
-                layout="@layout/toolbar_main"
-                android:id="@+id/included"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
