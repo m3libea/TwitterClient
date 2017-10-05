@@ -2,6 +2,7 @@ package com.codepath.apps.twitterclient.api;
 
 import android.content.Context;
 
+import com.codepath.apps.twitterclient.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -78,6 +79,24 @@ public class TwitterClient extends OAuthBaseClient {
         if(screenName != null) {
             params.put("screen_name", screenName);
         }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getFollowers(User user, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/list.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        params.put("cursor", String.valueOf(cursor));
+        params.put("user_id", String.valueOf(user.getUid()));
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getFollowing(User user, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friends/list.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        params.put("cursor", String.valueOf(cursor));
+        params.put("user_id", String.valueOf(user.getUid()));
         getClient().get(apiUrl, params, handler);
     }
 

@@ -1,5 +1,6 @@
 package com.codepath.apps.twitterclient.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -76,6 +77,20 @@ public class UserActivity extends AppCompatActivity {
                 .add(R.id.fmTimeline, fragment)
                 .commit();
 
+        binding.tvFollowers.setOnClickListener(view -> {
+            Intent i = new Intent(UserActivity.this, FollowActivity.class);
+            i.putExtra("user", Parcels.wrap(user));
+            startActivity(i);
+
+        });
+
+        binding.tvFollowing.setOnClickListener(view -> {
+            Intent i = new Intent(UserActivity.this, FollowActivity.class);
+            i.putExtra("user", Parcels.wrap(user));
+            i.putExtra("following", true);
+            startActivity(i);
+
+        });
     }
 
     private void setupToolbar() {

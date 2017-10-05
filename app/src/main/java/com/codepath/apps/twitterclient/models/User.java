@@ -6,9 +6,12 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
+
+import java.util.ArrayList;
 
 /**
  * Created by m3libea on 3/26/17.
@@ -63,7 +66,7 @@ public class User extends BaseModel{
         return screenName;
     }
 
-    public long getUuid() {
+    public long getUid() {
         return uuid;
     }
 
@@ -117,31 +120,44 @@ public class User extends BaseModel{
 
     }
 
-    public String getCFollowers(){
-        String count = null;
+    public static ArrayList<User> fromJSONArray(JSONArray jsonArray){
+        ArrayList<User> users = new ArrayList<>();
 
-        if(followers >= 10000){
-            double div = followers/10000;
-            count = div + "K";
-        }else if (followers > 0){
-            count = followers.toString();
-        }else{
-            count = "";
+        for(int i = 0; i<jsonArray.length() ; i++){
+            try {
+                JSONObject userObjet = jsonArray.getJSONObject(i);
+                User user = fromJSON(userObjet);
+                if(user != null ){
+                    user.save();
+                    users.add(user);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
+            }
         }
-        return count;
+
+        return users;
+    }
+
+    public String getCFollowers() {
+        return coolFormat(followers, 0);
     }
 
     public String getCFollowing(){
-        String count = null;
+        return coolFormat(following, 0);
+    }
 
-        if(following >= 10000){
-            double div = following/10000;
-            count = div + "K";
-        }else if (following > 0){
-            count = following.toString();
-        }else{
-            count = "";
-        }
-        return count;
+    private static char[] c = new char[]{'K', 'M', 'B', 'T'};
+
+    private static String coolFormat(double n, int iteration) {
+        double d = ((long) n / 100) / 10.0;
+        boolean isRound = (d * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+        return (d < 1000? //this determines the class, i.e. 'k', 'm' etc
+                ((d > 99.9 || isRound || (!isRound && d > 9.99)? //this decides whether to trim the decimals
+                        (int) d * 10 / 10 : d + "" // (int) d * 10 / 10 drops the decimal
+                ) + "" + c[iteration])
+                : coolFormat(d, iteration+1));
+
     }
 }

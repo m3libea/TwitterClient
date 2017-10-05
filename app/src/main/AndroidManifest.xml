@@ -51,7 +51,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TweetActivity" />
-        <activity android:name=".activities.UserActivity"></activity>
+        <activity android:name=".activities.UserActivity" />
+        <activity android:name=".activities.FollowActivity"></activity>
     </application>
 
 </manifest>

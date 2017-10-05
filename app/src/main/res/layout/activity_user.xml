@@ -110,7 +110,7 @@
                     android:paddingLeft="@dimen/dp20"
                     android:textSize="@dimen/dp15"
                     android:textColor="@color/primary"
-                    android:text="@{user.following + ` Following`}"
+                    android:text="@{user.CFollowing + ` Following`}"
                     tools:text="@string/example_following"/>
                 <TextView
                     android:id="@+id/tvFollowers"
@@ -119,7 +119,7 @@
                     android:paddingLeft="@dimen/dp20"
                     android:textSize="@dimen/dp15"
                     android:textColor="@color/primary"
-                    android:text="@{user.followers + ` Followers`}"
+                    android:text="@{user.CFollowers + ` Followers`}"
                     tools:text="@string/example_followers"/>
             </LinearLayout>
             <View
