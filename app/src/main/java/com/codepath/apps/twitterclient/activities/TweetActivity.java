@@ -175,7 +175,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
     }
 
     @Override
-    public void onFinishingTweet(String body, Boolean tweet) {
+    public void onFinishingTweet(String body,Tweet t, Boolean tweet) {
         String minBody = body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length), body.length()));
         if (isNetworkAvailable()){
             client.composeReply(this.tweet.getUser().getScreenName(), this.tweet.getUid(), minBody, new JsonHttpResponseHandler(){

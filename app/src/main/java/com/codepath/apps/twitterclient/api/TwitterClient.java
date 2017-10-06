@@ -2,6 +2,7 @@ package com.codepath.apps.twitterclient.api;
 
 import android.content.Context;
 
+import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -131,5 +132,26 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("account/verify_credentials.json");
         getClient().get(apiUrl, null, handler);
     }
+
+
+    public void postFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweet.getUid());
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void destroyFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweet.getUid());
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void postRetweet(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl(String.format("statuses/retweet/%d.json", tweet.getUid()));
+        getClient().post(apiUrl, null, handler);
+    }
+
 }
 

@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.twitterclient.R;
-import com.codepath.apps.twitterclient.TwitterApplication;
-import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -29,14 +27,12 @@ import cz.msebera.android.httpclient.Header;
 public class HometimelineFragment extends TweetsFragment {
 
     private final String TAG = "HTLFragment";
-    private TwitterClient client;
 
     private EndlessRecyclerViewScrollListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        client = TwitterApplication.getRestClient();
 
     }
 

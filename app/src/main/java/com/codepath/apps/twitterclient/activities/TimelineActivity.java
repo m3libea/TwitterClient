@@ -175,7 +175,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
 
     @Override
-    public void onFinishingTweet(String body, Boolean tweet) {
+    public void onFinishingTweet(String body, Tweet t, Boolean tweet) {
         if (tweet){
             if (isNetworkAvailable()) {
                 client.composeTweet(body.substring(0, Math.min(getResources().getInteger(R.integer.max_tweet_length),
