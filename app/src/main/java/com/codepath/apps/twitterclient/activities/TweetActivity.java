@@ -4,18 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +38,8 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
 public class TweetActivity extends AppCompatActivity implements ComposeFragment.ComposeDialogListener{
 
@@ -72,6 +78,14 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
         if(tweet.getfCount() == 0){
             binding.tvLikes.setVisibility(View.GONE);
         }
+
+        int idcolor = binding.btRt.isSelected() ? R.color.primary : R.color.lightText;
+        int color = ContextCompat.getColor(this, idcolor);
+        binding.btRt.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+
+        Drawable icon = ContextCompat
+                .getDrawable(this, binding.btLike.isSelected()? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
+        binding.btLike.setBackground(icon);
 
 
 
@@ -115,7 +129,104 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
 
         }
 
+        //Replybutton
         binding.btReply.setOnClickListener(view -> composeReply());
+
+        //RT button
+        if(tweet.getRetweeted()){
+            binding.btRt.setEnabled(false);
+            binding.btRt.getBackground()
+                    .setColorFilter(ContextCompat
+                            .getColor(this, R.color.primary) , PorterDuff.Mode.SRC_IN);
+        }else{
+            binding.btRt.setOnClickListener(view -> {
+                view.setSelected(!view.isSelected());
+                setRtBT();
+
+                view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                int iColor = view.isSelected() ? R.color.primary : R.color.lightText;
+                int c = ContextCompat.getColor(this, iColor);
+                view.getBackground().setColorFilter(c, PorterDuff.Mode.SRC_IN);
+                retweet();
+                tweet.save();
+                view.setEnabled(false);
+            });
+        }
+
+        //Like button
+        binding.btLike.setOnClickListener(view -> {
+            view.setSelected(!view.isSelected());
+            setLikeBT();
+
+            view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            Drawable i = ContextCompat
+                    .getDrawable(this, view.isSelected()? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
+            view.setBackground(i);
+            setFavouriteStatus();
+            tweet.save();
+        });
+    }
+
+    private void setFavouriteStatus() {
+        if (tweet.getFavorited()) {
+            client.postFavorite(tweet,new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d(TAG, "Liked" + response.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(TAG, errorResponse.toString());
+                }
+            });
+        }else{
+            client.destroyFavorite(tweet,new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d(TAG, "DestroyLiked" + response.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(TAG, errorResponse.toString());
+                }
+            });
+        }
+    }
+
+    private void retweet() {
+        client.postRetweet(tweet, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, response.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d(TAG, errorResponse.toString());
+            }
+        });
+    }
+
+    private void setLikeBT() {
+        tweet.setFavorited(binding.btLike.isSelected());
+        tweet.setfCount(tweet.getFavorited()? tweet.getfCount() + 1 : tweet.getfCount() - 1);
+        if (tweet.getfCount() == 0){
+            binding.tvLikes.setVisibility(View.GONE);
+            binding.tvLikes.setText(" ");
+        }else{
+            binding.tvLikes.setVisibility(View.VISIBLE);
+            binding.tvLikes.setText(Integer.toString(tweet.getfCount())+ " Likes");
+        }
+
+    }
+
+    private void setRtBT() {
+        tweet.setRetweeted(binding.btRt.isSelected());
+        tweet.setRtCount(tweet.getRtCount() + 1 );
+        binding.tvRT.setText(Integer.toString(tweet.getRtCount())+ " Retweets");
+        binding.tvRT.setVisibility(View.VISIBLE);
     }
 
     private void setVideo(String url) {

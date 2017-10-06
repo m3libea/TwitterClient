@@ -152,7 +152,7 @@
                     android:layout_below="@id/viewm"
                     android:gravity="center"
                     android:layout_marginTop="@dimen/dp10">
-                    <Button
+                    <ImageButton
                         android:id="@+id/btReply"
                         android:layout_width="@dimen/dp24"
                         android:layout_height="@dimen/dp20"
@@ -162,7 +162,7 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" >
                     </Space>
-                    <Button
+                    <ImageButton
                         android:id="@+id/btRt"
                         android:layout_width="@dimen/dp24"
                         android:layout_height="@dimen/dp20"
@@ -172,7 +172,7 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" >
                     </Space>
-                    <Button
+                    <ImageButton
                         android:id="@+id/btLike"
                         android:layout_width="@dimen/dp24"
                         android:layout_height="@dimen/dp20"
@@ -182,7 +182,7 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" >
                     </Space>
-                    <Button
+                    <ImageButton
                         android:id="@+id/btMessage"
                         android:layout_width="@dimen/dp24"
                         android:layout_height="@dimen/dp20"
