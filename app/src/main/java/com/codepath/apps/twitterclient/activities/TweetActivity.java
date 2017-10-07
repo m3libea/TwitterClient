@@ -174,7 +174,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
         //SPAN hashtag, user
 
         binding.tvBody.setText(tweet.getBody());
-
+        setExtraInfo(tweet);
         new PatternEditableBuilder()
                 .addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(this, R.color.primary),
                         text -> showUser(text.replace("@","")))
@@ -183,6 +183,17 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
                 .into(binding.tvBody);
     }
 
+    private void setExtraInfo(Tweet tweet) {
+        String body = tweet.getBody();
+        if (tweet.getRetweet()){
+            binding.tvExtra.setText("Retweeted by " + tweet.getRetweetedBy());
+            binding.llExtra.setVisibility(View.VISIBLE);
+        }else{
+            binding.llExtra.setVisibility(View.GONE);
+        }
+
+
+    }
     private void showHT(String query) {
         Intent i = new Intent(this, SearchActivity.class);
         i.putExtra("query", query);

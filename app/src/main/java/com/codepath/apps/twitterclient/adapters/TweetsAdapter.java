@@ -178,6 +178,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             //SPAN
 
             binding.tvBody.setText(tweet.getBody());
+            setExtraInfo(tweet);
 
             // Style clickable spans based on pattern
             new PatternEditableBuilder()
@@ -186,6 +187,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(context, R.color.primary_dark),
                             text -> clickListener.showHT(text))
                     .into(binding.tvBody);
+
+
+        }
+
+        private void setExtraInfo(Tweet tweet) {
+            String body = tweet.getBody();
+            if (tweet.getRetweet()){
+                binding.tvExtra.setText("Retweeted by " + tweet.getRetweetedBy());
+                binding.llInfo.setVisibility(View.VISIBLE);
+            }else{
+                binding.llInfo.setVisibility(View.GONE);
+            }
+
 
         }
 

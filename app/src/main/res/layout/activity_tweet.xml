@@ -27,43 +27,70 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp15">
-                <ImageView
-                    android:id="@+id/ivProfile"
-                    android:layout_width="@dimen/dp50"
-                    android:layout_height="@dimen/dp50"
-                    tools:src="@drawable/ic_twitter"
-                    android:tint="@color/primary"
-                    android:layout_marginRight="@dimen/dp10"/>
                 <LinearLayout
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/lltop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/ivProfile"
+                        android:layout_width="@dimen/dp50"
+                        android:layout_height="@dimen/dp50"
+                        tools:src="@drawable/ic_twitter"
+                        android:tint="@color/primary"
+                        android:layout_marginRight="@dimen/dp10"/>
+                    <LinearLayout
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_toRightOf="@id/ivProfile"
+                        android:gravity="center_vertical"
+                        android:id="@+id/llInfo">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvScreenname"
+                            tools:text="Rocio Romero"
+                            android:text="@{tweet.user.screenName}"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_dark"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvUsername"
+                            android:text="@{`@` + tweet.user.name}"
+                            android:textColor="@color/lightText"
+                            tools:text="@string/example_username"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llExtra"
+                    android:layout_below="@id/lltop"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_toRightOf="@id/ivProfile"
-                    android:gravity="center_vertical"
-                    android:id="@+id/llInfo">
+                    android:layout_marginTop="@dimen/dp10">
+                    <ImageView
+                        android:id="@+id/ivExtra"
+                        android:layout_width="@dimen/dp10"
+                        android:layout_height="@dimen/dp10"
+                        android:background="@drawable/ic_twitter_retweet"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
                     <TextView
+                        android:id="@+id/tvExtra"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tvScreenname"
-                        tools:text="Rocio Romero"
-                        android:text="@{tweet.user.screenName}"
-                        android:textStyle="bold"
-                        android:textColor="@color/primary_dark"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tvUsername"
-                        android:text="@{`@` + tweet.user.name}"
                         android:textColor="@color/lightText"
-                        tools:text="@string/example_username"/>
+                        android:layout_marginLeft="4dp"
+                        android:text="Reply to"/>
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/llInfo"
-                    android:layout_marginTop="@dimen/dp20"
+                    android:layout_below="@+id/llExtra"
+                    android:layout_marginTop="@dimen/dp10"
                     android:layout_marginBottom="@dimen/dp20"
                     android:textSize="@dimen/dp24"
                     android:text="@{tweet.body}"
