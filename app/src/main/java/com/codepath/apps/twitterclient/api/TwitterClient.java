@@ -153,5 +153,35 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(apiUrl, null, handler);
     }
 
+
+    public void getSearchTimeline(String query, int count, long since_id, long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        if(query != null) {
+            params.put("q", query);
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getDirectMessages(int count, long since_id, long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
 }
 

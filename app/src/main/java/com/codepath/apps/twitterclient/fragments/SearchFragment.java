@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.twitterclient.R;
+import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -24,11 +24,14 @@ import cz.msebera.android.httpclient.Header;
  * Created by m3libea on 10/2/17.
  */
 
-public class HometimelineFragment extends TweetsFragment {
+public class SearchFragment extends TweetsFragment {
 
-    private final String TAG = "HTLFragment";
+    private final String TAG = "SearchLFragment";
+    public TwitterClient client;
 
     private EndlessRecyclerViewScrollListener listener;
+
+    String query;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,10 +44,10 @@ public class HometimelineFragment extends TweetsFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view =  super.onCreateView(inflater, container, savedInstanceState);
-
+        client = TwitterApplication.getRestClient();
         setupView();
 
-        getTimeline();
+
         return view;
     }
 
@@ -80,25 +83,28 @@ public class HometimelineFragment extends TweetsFragment {
         binding.rvTweets.addOnScrollListener(listener);
     }
 
-    private void getTimeline() {
-        if (isNetworkAvailable()){
-            populateTimeline(1, -1);
+    public void fetch(String query){
+        this.query = query;
+        populateTimeline(1, -1);
 
-        }else{
-            addFromQuery(SQLite.select().from(Tweet.class).queryList());
-            Snackbar bar = Snackbar.make(getActivity().findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG)
-                    .setAction("Retry", v -> getTimeline());
-            bar.show();
-        }
+    }
+    public void clean(){
+        String query = null;
+        cleanRV();
     }
 
     private void populateTimeline(int sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d(TAG, "Populate tweets: " + response.toString());
+        client.getSearchTimeline(query, 25, sinceId, maxId,new JsonHttpResponseHandler(){
 
-                addItems(response);
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, "Search tweets: " + response.toString());
+
+                try {
+                    addItems(response.getJSONArray("statuses"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -110,11 +116,16 @@ public class HometimelineFragment extends TweetsFragment {
 
     //Move to timeline Fragment
     private void refreshTimeline(long sinceId, long maxId){
-        client.getHomeTimeline(sinceId, maxId, new JsonHttpResponseHandler(){
+        client.getSearchTimeline(query, 25, sinceId, maxId,new JsonHttpResponseHandler(){
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d(TAG, "Refresh tweets: " + response.toString());
-                addRefresh(response);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG, "Search tweets: " + response.toString());
+
+                try {
+                    addRefresh(response.getJSONArray("statuses"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

@@ -1,4 +1,4 @@
-*TwitterClient*
+#*TwitterClient*
 
 **TwitterClient** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
@@ -28,7 +28,7 @@ The following **optional** features are implemented:
   * [X] The user that wrote the original tweet is automatically "@" replied in compose
 * [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [X] User can take favorite (and unfavorite) or retweet actions on a tweet
-* [ ] User can **search for tweets matching a particular query** and see results
+* [X] User can **search for tweets matching a particular query** and see results
 * [ ] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
 The following **bonus** features are implemented:

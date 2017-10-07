@@ -18,8 +18,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +36,7 @@ import com.codepath.apps.twitterclient.adapters.TimelineFragmentPagerAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.ActivityTimelineBinding;
 import com.codepath.apps.twitterclient.fragments.ComposeFragment;
+import com.codepath.apps.twitterclient.fragments.SearchFragment;
 import com.codepath.apps.twitterclient.fragments.TweetsFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
@@ -136,19 +139,40 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         View logo = binding.toolbar.getChildAt(0);
 
         logo.setOnClickListener(view -> {
-            TweetsFragment fm = (TweetsFragment)aPager.getRegisteredFragment(binding.viewpager.getCurrentItem());
-            fm.binding.rvTweets.scrollToPosition(0);
+            Intent i = new Intent(this, UserActivity.class);
+            i.putExtra("user", Parcels.wrap(user));
+            startActivity(i);
+//            TweetsFragment fm = (TweetsFragment)aPager.getRegisteredFragment(binding.viewpager.getCurrentItem());
+//            fm.binding.rvTweets.scrollToPosition(0);
         });
 
 
+        //To avoid errors, increase the page limit
+        binding.viewpager.setOffscreenPageLimit(3);
         binding.viewpager.setAdapter(aPager);
+
+        binding.slidingTabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(binding.viewpager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if (tab.equals(binding.slidingTabs.getTabAt(2))){
+                    SearchFragment sf = (SearchFragment) aPager.getRegisteredFragment(2);
+                    sf.clean();
+                }
+            }
+        });
 
         // Give the TabLayout the ViewPager
         binding.slidingTabs.setupWithViewPager(binding.viewpager);
 
         int[] imageResId = {
                 R.drawable.ic_twitter_home,
-                R.drawable.ic_twitter_alert_2};
+                R.drawable.ic_twitter_alert_2,
+                R.drawable.ic_twitter_search};
         ColorStateList colors;
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -164,6 +188,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
             Drawable iconWrap = DrawableCompat.wrap(tab.getIcon());
             DrawableCompat.setTintList(iconWrap, colors);
             tab.setIcon(iconWrap);
+
         }
 
         binding.faCompose.setOnClickListener(view -> {
@@ -188,7 +213,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
                                 TweetsFragment fm = (TweetsFragment)aPager.getRegisteredFragment(0);
                                 fm.addFront(tweet);
-
+                                binding.viewpager.setCurrentItem(0);
                                 Log.d(TAG, "Create Tweet: " + response.toString());
 
                             }
@@ -221,6 +246,34 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                binding.viewpager.setCurrentItem(2);
+                ((SearchFragment) aPager.getRegisteredFragment(binding.viewpager.getCurrentItem())).clean();
+
+                searchView.clearFocus();
+
+                SearchFragment fm = (SearchFragment) aPager.getRegisteredFragment(2);
+
+                fm.fetch(query);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -249,11 +302,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
                 builder.create().show();
                 return true;
-            case R.id.action_profile:
-                Intent i = new Intent(this, UserActivity.class);
-                i.putExtra("user", Parcels.wrap(user));
-                startActivity(i);
-
             default:
                 return super.onOptionsItemSelected(item);
         }

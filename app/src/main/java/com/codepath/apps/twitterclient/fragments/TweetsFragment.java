@@ -112,6 +112,11 @@ public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActio
         binding.rvTweets.scrollToPosition(0);
     }
 
+    public void cleanRV(){
+        tweets.clear();
+        aTweets.notifyDataSetChanged();
+    }
+
     @Override
     public void reply(Tweet tweet) {
         FragmentManager fm = getChildFragmentManager();
