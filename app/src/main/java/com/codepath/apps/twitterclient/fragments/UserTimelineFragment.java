@@ -13,10 +13,8 @@ import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.external.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -101,11 +99,10 @@ public class UserTimelineFragment extends TweetsFragment {
 
     private void getTimeline() {
         if (isNetworkAvailable()){
+            showProgressBar();
             populateTimeline(1, -1);
 
         }else{
-            addFromQuery(SQLite.select().from(Tweet.class).queryList());
-
             Snackbar bar = Snackbar.make(getActivity().findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_LONG)
                     .setAction("Retry", v -> getTimeline());
             bar.show();
@@ -118,11 +115,13 @@ public class UserTimelineFragment extends TweetsFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, "Populate tweets: " + response.toString());
 
+                hideProgressBar();
                 addItems(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                hideProgressBar();
                 Log.d(TAG, errorResponse.toString());
             }
         });

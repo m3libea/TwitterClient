@@ -225,4 +225,11 @@ public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActio
         i.putExtra("query", query);
         getActivity().startActivity(i);
     }
+
+    public void showProgressBar(){
+        binding.pBar.setVisibility(View.VISIBLE);
+    }
+    public void hideProgressBar(){
+        binding.pBar.setVisibility(View.GONE);
+    }
 }

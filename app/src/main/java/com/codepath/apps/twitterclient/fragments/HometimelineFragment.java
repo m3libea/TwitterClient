@@ -69,6 +69,7 @@ public class HometimelineFragment extends TweetsFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (isNetworkAvailable()){
+                    showProgressBar();
                     populateTimeline(1, tweets.get(tweets.size()-1).getUid() - 1);
                 }else{
                     Snackbar bar = Snackbar.make(getActivity().findViewById(R.id.activity_timeline), getResources().getString(R.string.connection_error) , Snackbar.LENGTH_SHORT);
@@ -82,6 +83,7 @@ public class HometimelineFragment extends TweetsFragment {
 
     private void getTimeline() {
         if (isNetworkAvailable()){
+            showProgressBar();
             populateTimeline(1, -1);
 
         }else{
@@ -97,12 +99,14 @@ public class HometimelineFragment extends TweetsFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, "Populate tweets: " + response.toString());
+                hideProgressBar();
 
                 addItems(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                hideProgressBar();
                 Log.d(TAG, errorResponse.toString());
             }
         });
@@ -114,11 +118,13 @@ public class HometimelineFragment extends TweetsFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d(TAG, "Refresh tweets: " + response.toString());
+                hideProgressBar();
                 addRefresh(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                hideProgressBar();
                 Log.d(TAG, errorResponse.toString());
             }
         });
