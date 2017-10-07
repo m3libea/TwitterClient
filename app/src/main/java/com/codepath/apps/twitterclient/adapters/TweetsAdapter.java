@@ -24,10 +24,12 @@ import com.codepath.apps.twitterclient.activities.UserActivity;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.MediaTweet;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.utils.PatternEditableBuilder;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -42,6 +44,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     private Context context;
     private List<Tweet> tweets;
     private TweetActionListener actionListener;
+    private TweetClickListener clickListener;
 
     public interface TweetActionListener {
         void reply(Tweet tweet);
@@ -50,8 +53,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     }
 
+    public interface TweetClickListener {
+        void showUser(String screename);
+        void showHT(String query);
+    }
+
     public void setActionListener(TweetActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    public void setClickListener(TweetClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -162,6 +174,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             binding.btReply.setOnClickListener(view -> {
                 actionListener.reply(tweet);
             });
+
+            //SPAN
+
+            binding.tvBody.setText(tweet.getBody());
+
+            // Style clickable spans based on pattern
+            new PatternEditableBuilder()
+                    .addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(context, R.color.primary),
+                            text -> clickListener.showUser(text.replace("@","")))
+                    .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(context, R.color.primary_dark),
+                            text -> clickListener.showHT(text))
+                    .into(binding.tvBody);
 
         }
 

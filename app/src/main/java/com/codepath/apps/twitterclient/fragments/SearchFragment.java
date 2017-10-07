@@ -33,6 +33,16 @@ public class SearchFragment extends TweetsFragment {
 
     String query;
 
+    public static SearchFragment newInstance(String q) {
+
+        Bundle args = new Bundle();
+
+        SearchFragment fragment = new SearchFragment();
+        args.putString("query", q);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +57,10 @@ public class SearchFragment extends TweetsFragment {
         client = TwitterApplication.getRestClient();
         setupView();
 
-
+        if (getArguments() != null ) {
+            query = getArguments().getString("query");
+            fetch(query);
+        }
         return view;
     }
 

@@ -1,6 +1,7 @@
 package com.codepath.apps.twitterclient.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,15 +19,20 @@ import android.widget.Toast;
 
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TwitterApplication;
+import com.codepath.apps.twitterclient.activities.SearchActivity;
+import com.codepath.apps.twitterclient.activities.UserActivity;
 import com.codepath.apps.twitterclient.adapters.TweetsAdapter;
 import com.codepath.apps.twitterclient.api.TwitterClient;
 import com.codepath.apps.twitterclient.databinding.FragmentTweetsBinding;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.models.User;
 import com.codepath.apps.twitterclient.utils.TweetDividerDecoration;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +43,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by m3libea on 10/2/17.
  */
 
-public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActionListener, ComposeFragment.ComposeDialogListener{
+public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActionListener, TweetsAdapter.TweetClickListener, ComposeFragment.ComposeDialogListener{
 
     private TweetsAdapter aTweets;
 
@@ -68,6 +74,7 @@ public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActio
     private void setRecyclerView() {
         aTweets = new TweetsAdapter(getContext(), tweets);
         aTweets.setActionListener(this);
+        aTweets.setClickListener(this);
         binding.rvTweets.setAdapter(aTweets);
         lyManager = new LinearLayoutManager(getContext());
         binding.rvTweets.setLayoutManager(lyManager);
@@ -187,5 +194,35 @@ public class TweetsFragment extends Fragment implements TweetsAdapter.TweetActio
                 Log.d(TAG, errorResponse.toString());
             }
         });
+    }
+
+    @Override
+    public void showUser(String screename) {
+        client.getUser(screename, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                User user = null;
+                try {
+                    user = User.fromJSON(response.getJSONObject(0));
+                    Intent i = new Intent(getActivity(), UserActivity.class);
+                    i.putExtra("user", Parcels.wrap(user));
+                    getActivity().startActivity(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    @Override
+    public void showHT(String query) {
+        Intent i = new Intent(getActivity(), SearchActivity.class);
+        i.putExtra("query", query);
+        getActivity().startActivity(i);
     }
 }
