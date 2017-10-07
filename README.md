@@ -40,7 +40,9 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] RT and Like animation.
+* [X] RT and Like animation.
+* [X] Reply to on tweet
+* [X] RT by on tweet
 
 ## Video Walkthrough
 

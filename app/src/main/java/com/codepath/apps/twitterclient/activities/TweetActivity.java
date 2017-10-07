@@ -187,6 +187,10 @@ public class TweetActivity extends AppCompatActivity implements ComposeFragment.
         if (tweet.getRetweet()){
             binding.tvExtra.setText("Retweeted by " + tweet.getRetweetedBy());
             binding.llExtra.setVisibility(View.VISIBLE);
+        }else if (tweet.getReplyTo() != null) {
+            binding.tvExtra.setText("Reply to " + tweet.getReplyTo());
+            binding.ivExtra.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_reply));
+            binding.llExtra.setVisibility(View.VISIBLE);
         }else{
             binding.llExtra.setVisibility(View.GONE);
         }
