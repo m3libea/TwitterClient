@@ -192,15 +192,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
         private void setExtraInfo(Tweet tweet) {
-            String body = tweet.getBody();
             if (tweet.getRetweet()){
                 binding.tvExtra.setText("Retweeted by " + tweet.getRetweetedBy());
+                binding.ivExtra.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_twitter_retweet));
+                binding.llInfo.setVisibility(View.VISIBLE);
+            }else if (tweet.getReplyTo() != null) {
+                binding.tvExtra.setText("Reply to " + tweet.getReplyTo());
+                binding.ivExtra.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_reply));
                 binding.llInfo.setVisibility(View.VISIBLE);
             }else{
                 binding.llInfo.setVisibility(View.GONE);
             }
-
-
         }
 
         private void setLikeBT(Tweet tweet) {

@@ -64,6 +64,8 @@ public class Tweet extends BaseModel{
     @Column
     public Boolean isRetweet;
 
+    @Column
+    public String replyTo;
 
     List<MediaTweet> media;
 
@@ -131,6 +133,12 @@ public class Tweet extends BaseModel{
             } else {
                 tweet.isRetweet = false;
                 tweet.retweetedBy = "No one";
+            }
+
+            if(!jsonObject.isNull("in_reply_to_screen_name")){
+                tweet.replyTo = jsonObject.getString("in_reply_to_screen_name");
+            }else{
+                tweet.replyTo = null;
             }
 
             tweet.body = jsonObject.getString("text");
@@ -254,6 +262,10 @@ public class Tweet extends BaseModel{
         }
 
         return formattedDate;
+    }
+
+    public String getReplyTo() {
+        return replyTo;
     }
 
     public MediaTweet getOneMedia() {
