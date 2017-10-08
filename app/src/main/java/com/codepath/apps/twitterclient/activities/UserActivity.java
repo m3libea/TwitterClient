@@ -10,6 +10,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -99,6 +100,12 @@ public class UserActivity extends AppCompatActivity {
             startActivity(i);
 
         });
+
+        //Verified
+
+        if (user.verified){
+            binding.ivVerified.setVisibility(View.VISIBLE);
+        }
 
         //SPAN hashtag, user
 

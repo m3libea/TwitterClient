@@ -43,6 +43,7 @@ The following **additional** features are implemented:
 * [X] RT and Like animation.
 * [X] "Reply to" on item tweet
 * [X] "RT by" on item tweet
+* [X] Verify user check on User view.
 
 ## Video Walkthrough
 
