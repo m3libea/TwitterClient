@@ -133,7 +133,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
     private void setupView() {
         setSupportActionBar(binding.toolbar);
-        //getSupportActionBar().setLogo(R.drawable.ic_twitter);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         View logo = binding.toolbar.getChildAt(0);
