@@ -2,6 +2,8 @@ package com.codepath.apps.twitterclient.api;
 
 import android.content.Context;
 
+import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -49,6 +51,64 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiURL, params, handler);
     }
 
+    //getMentions
+
+    public void getMentions(long since_id, long max_id, AsyncHttpResponseHandler handler){
+        String apiURL = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        getClient().get(apiURL, params, handler);
+    }
+
+    //getUser
+
+    public void getUser(String screenname, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("users/lookup.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenname);
+        getClient().get(apiUrl, params, handler);
+    }
+
+    //User Timeline
+    public void getUserTimeline(String screenName, int count, long since_id, long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        if(screenName != null) {
+            params.put("screen_name", screenName);
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getFollowers(User user, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("followers/list.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        params.put("cursor", String.valueOf(cursor));
+        params.put("user_id", String.valueOf(user.getUid()));
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getFollowing(User user, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friends/list.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        params.put("cursor", String.valueOf(cursor));
+        params.put("user_id", String.valueOf(user.getUid()));
+        getClient().get(apiUrl, params, handler);
+    }
 
 
     //ComposeTWEET
@@ -81,5 +141,56 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("account/verify_credentials.json");
         getClient().get(apiUrl, null, handler);
     }
+
+
+    public void postFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweet.getUid());
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void destroyFavorite(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("id", tweet.getUid());
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void postRetweet(Tweet tweet, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl(String.format("statuses/retweet/%d.json", tweet.getUid()));
+        getClient().post(apiUrl, null, handler);
+    }
+
+
+    public void getSearchTimeline(String query, int count, long since_id, long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        if(query != null) {
+            params.put("q", query);
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getDirectMessages(int count, long since_id, long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        params.put("count", String.valueOf(count));
+        if (since_id > 0) {
+            params.put("since_id", String.valueOf(since_id));
+        }
+        if(max_id > 0) {
+            params.put("max_id", String.valueOf(max_id));
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
 }
 

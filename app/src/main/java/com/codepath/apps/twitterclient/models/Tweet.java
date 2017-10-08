@@ -58,6 +58,15 @@ public class Tweet extends BaseModel{
     @Column
     Integer fCount = 0;
 
+    @Column
+    public String retweetedBy;
+
+    @Column
+    public Boolean isRetweet;
+
+    @Column
+    public String replyTo;
+
     List<MediaTweet> media;
 
     public Tweet() {
@@ -96,9 +105,42 @@ public class Tweet extends BaseModel{
         return fCount;
     }
 
+    public String getRetweetedBy() {
+        return retweetedBy;
+    }
+
+    public Boolean getRetweet() {
+        return isRetweet;
+    }
+
+    public void setRetweeted(Boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    public void setFavorited(Boolean favorited) {
+        this.favorited = favorited;
+    }
+
     public static Tweet fromJSON(JSONObject jsonObject){
         Tweet tweet = new Tweet();
         try {
+
+            tweet.uid = jsonObject.getLong("id");
+            if(!jsonObject.isNull("retweeted_status")) {
+                tweet.retweetedBy = User.fromJSON(jsonObject.getJSONObject("user")).getName();
+                jsonObject = jsonObject.getJSONObject("retweeted_status");
+                tweet.isRetweet = true;
+            } else {
+                tweet.isRetweet = false;
+                tweet.retweetedBy = "No one";
+            }
+
+            if(!jsonObject.isNull("in_reply_to_screen_name")){
+                tweet.replyTo = jsonObject.getString("in_reply_to_screen_name");
+            }else{
+                tweet.replyTo = null;
+            }
+
             tweet.body = jsonObject.getString("text");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.uid = jsonObject.getLong("id");
@@ -108,8 +150,8 @@ public class Tweet extends BaseModel{
                 tweet.rtCount = jsonObject.getInt("retweet_count");
             }
             tweet.favorited = jsonObject.getBoolean("favorited");
-            if(!jsonObject.isNull("favourites_count")) {
-                tweet.fCount = jsonObject.getInt("favourites_count");
+            if(!jsonObject.isNull("favorite_count")) {
+                tweet.fCount = jsonObject.getInt("favorite_count");
             }
             if(!jsonObject.isNull("entities")) {
                 JSONObject entitiesObj = jsonObject.getJSONObject("entities");
@@ -222,6 +264,10 @@ public class Tweet extends BaseModel{
         return formattedDate;
     }
 
+    public String getReplyTo() {
+        return replyTo;
+    }
+
     public MediaTweet getOneMedia() {
         MediaTweet m = null;
 
@@ -253,29 +299,44 @@ public class Tweet extends BaseModel{
     public String getRTCount(){
         String count = null;
 
-        if(rtCount >= 10000){
-            double div = rtCount/10000;
-            count = div + "K";
-        }else if (rtCount > 0){
-            count = rtCount.toString();
+        if (rtCount == 0){
+            return " ";
+        }else if(rtCount < 10000){
+            return Integer.toString(rtCount);
         }else{
-            count = "";
+            return coolFormat(rtCount, 0);
         }
-        return count;
     }
 
     public String getLiked(){
         String count = null;
 
-        if(fCount >= 10000){
-            double div = fCount/10000;
-            count = div + "K";
-        }else if (fCount > 0){
-            count = fCount.toString();
+        if (fCount == 0){
+            return " ";
+        }else if(fCount < 10000){
+            return Integer.toString(fCount);
         }else{
-            count = "";
+            return coolFormat(fCount, 0);
         }
-        return count;
     }
 
+    private static char[] c = new char[]{'K', 'M', 'B', 'T'};
+
+    private static String coolFormat(double n, int iteration) {
+        double d = ((long) n / 100) / 10.0;
+        boolean isRound = (d * 10) %10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+        return (d < 1000? //this determines the class, i.e. 'k', 'm' etc
+                ((d > 99.9 || isRound || (!isRound && d > 9.99)? //this decides whether to trim the decimals
+                        (int) d * 10 / 10 : d + "" // (int) d * 10 / 10 drops the decimal
+                ) + "" + c[iteration])
+                : coolFormat(d, iteration+1));
+
+    }
+    public void setRtCount(Integer rtCount) {
+        this.rtCount = rtCount;
+    }
+
+    public void setfCount(Integer fCount) {
+        this.fCount = fCount;
+    }
 }

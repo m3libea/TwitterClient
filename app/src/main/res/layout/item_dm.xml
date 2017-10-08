@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="dm" type="com.codepath.apps.twitterclient.models.DirectMessage"/>
+    </data>
+    <LinearLayout
+        android:id="@+id/llRow"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dp5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/dp50"
+            android:layout_height="@dimen/dp50"
+            app:srcCompat="@mipmap/ic_launcher"
+            android:id="@+id/ivProfile"
+            android:layout_margin="@dimen/dp10" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <FrameLayout
+                android:id="@+id/llInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left">
+                <TextView
+                    android:text="@{dm.sender.name}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvUsername"
+                    android:layout_gravity="left"
+                    android:textColor="@color/primary_dark"
+                    android:layout_marginRight="@dimen/dp5"
+                    tools:text="@string/example_name"/>
+                <TextView
+                    android:text="@{dm.relativeTimeAgo}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDate"
+                    android:layout_gravity="right"
+                    android:textColor="@color/primary_dark"
+                    tools:text="@string/example_date_format"/>
+            </FrameLayout>
+            <TextView
+                android:id="@+id/tvBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llInfo"
+                android:textSize="@dimen/dp15"
+                android:text="@{dm.text}"
+                android:textColor="@color/textPrimary"
+                android:lines="3"
+                android:autoLink="all"
+                android:ellipsize="end"
+                android:paddingRight="@dimen/dp10"
+                tools:text="@string/example_body"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

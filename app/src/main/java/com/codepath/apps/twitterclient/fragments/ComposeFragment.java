@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.databinding.FragmentComposeBinding;
+import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
 
 import org.parceler.Parcels;
@@ -40,10 +41,12 @@ public class ComposeFragment extends DialogFragment {
     String body;
     User user;
     String username;
+    private Tweet tweet;
+    private boolean fm;
 
 
     public interface ComposeDialogListener {
-        void onFinishingTweet(String body, Boolean tweet);
+        void onFinishingTweet(String body, Tweet t, Boolean tweet);
     }
 
     public ComposeFragment() {
@@ -74,6 +77,15 @@ public class ComposeFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+    public static ComposeFragment newInstance(String username, Tweet tweet, boolean fm) {
+        ComposeFragment fragment = new ComposeFragment();
+        Bundle args = new Bundle();
+        args.putString("username", username);
+        args.putParcelable("tweet", Parcels.wrap(tweet));
+        args.putBoolean("fm", fm);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -85,6 +97,8 @@ public class ComposeFragment extends DialogFragment {
         body = (String) getArguments().get("body");
         user = Parcels.unwrap(getArguments().getParcelable("user"));
         username = (String) getArguments().get("username");
+        tweet = Parcels.unwrap(getArguments().getParcelable("tweet"));
+        fm = getArguments().getBoolean("fm", false);
 
         return binding.getRoot();
     }
@@ -198,27 +212,27 @@ public class ComposeFragment extends DialogFragment {
                     Toast toast = Toast.makeText(getActivity(), R.string.toastDraftSaved, Toast.LENGTH_SHORT);
                     toast.show();
                     Log.d(TAG, "OK pushed");
-                    listener.onFinishingTweet(bUser, false);
+                    listener.onFinishingTweet(bUser, tweet, false);
                     dismiss();
                 });
                 builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
                     Toast toast = Toast.makeText(getActivity(), R.string.toastDraftNoSaved, Toast.LENGTH_SHORT);
                     toast.show();
                     Log.d(TAG, "Cancel pushed");
-                    listener.onFinishingTweet(null, false);
+                    listener.onFinishingTweet(null, tweet, false);
                     dismiss();
                 });
 
                 builder.create().show();
         }else{
-            listener.onFinishingTweet(null, false);
+            listener.onFinishingTweet(null, tweet,false);
             dismiss();
         }
 
     }
 
     private void postTweet() {
-        ComposeDialogListener listener = (ComposeDialogListener) getActivity();
+        ComposeDialogListener listener =  fm ? (ComposeDialogListener) getParentFragment():(ComposeDialogListener) getActivity();
 
         String bUser = binding.etBody.getText().toString();
 
@@ -226,7 +240,7 @@ public class ComposeFragment extends DialogFragment {
             Toast toast = Toast.makeText(getActivity(), R.string.toastEmptyTweet, Toast.LENGTH_SHORT);
             toast.show();
         }else {
-            listener.onFinishingTweet(bUser, true);
+            listener.onFinishingTweet(bUser, tweet, true);
             dismiss();
         }
     }

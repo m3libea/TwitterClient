@@ -68,7 +68,7 @@
             android:inputType="textMultiLine"
             android:lines="8"
             android:textColor="@color/textPrimary"
-            android:textColorHint="@color/background"
+            android:textColorHint="@color/bkground"
             android:textSize="@dimen/sp15" />
 
         <RelativeLayout

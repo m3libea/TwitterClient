@@ -7,147 +7,176 @@
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llRow"
-        android:orientation="horizontal" android:layout_width="match_parent"
+        android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
         android:padding="5dp">
-
-        <ImageView
-            android:layout_width="@dimen/dp50"
-            android:layout_height="@dimen/dp50"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:id="@+id/ivProfile"
-            android:layout_margin="@dimen/dp10" />
+        <LinearLayout
+            android:id="@+id/llInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp50"
+            android:layout_marginBottom="2dp">
+            <ImageView
+                android:id="@+id/ivExtra"
+                android:layout_width="@dimen/dp10"
+                android:layout_height="@dimen/dp10"
+                android:background="@drawable/ic_twitter_retweet"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="6dp"/>
+            <TextView
+                android:id="@+id/tvExtra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/lightText"
+                android:layout_marginLeft="4dp"
+                android:text="Reply to"/>
+        </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <FrameLayout
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <ImageView
+                android:layout_width="@dimen/dp50"
+                android:layout_height="@dimen/dp50"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:id="@+id/ivProfile"
+                android:layout_margin="@dimen/dp10" />
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left">
-                    <TextView
-                        android:text="@{tweet.user.name}"
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tvUsername"
-                        android:textColor="@color/primary_dark"
-                        android:layout_marginRight="@dimen/dp5"
-                        tools:text="@string/example_name"/>
+                        android:layout_gravity="left">
+                        <TextView
+                            android:text="@{tweet.user.name}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvUsername"
+                            android:textColor="@color/primary_dark"
+                            android:layout_marginRight="@dimen/dp5"
+                            tools:text="@string/example_name"/>
 
+                        <TextView
+                            android:text="@{`@` + tweet.user.screenName}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/lightText"
+                            android:id="@+id/tvScreenname"
+                            tools:text="@string/example_username"/>
+                    </LinearLayout>
                     <TextView
-                        android:text="@{`@` + tweet.user.screenName}"
+                        android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text='@{tweet.relativeTimeAgo}'
+                        tools:text="@string/example_Date"
+                        android:textSize="@dimen/dp10"
                         android:textColor="@color/lightText"
-                        android:id="@+id/tvScreenname"
-                        tools:text="@string/example_username"/>
+                        android:layout_gravity="right"/>
+
+                </FrameLayout>
+
+                <TextView
+                    android:text="@{tweet.body}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp10"
+                    android:autoLink="all"
+                    tools:text="@string/example_body"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:id="@+id/tvBody"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp5"
+                    android:maxHeight="@dimen/dp200">
+                    <ImageView
+                        android:id="@+id/ivMedia"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:src="@mipmap/ic_launcher"
+                        android:visibility="gone"/>
+
+                    <VideoView
+                        android:id="@+id/vvVideo"
+                        android:layout_width="match_parent"
+                        android:visibility="visible"
+                        android:layout_height="@dimen/dp200" />
+                </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/llRTL"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/viewt"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:layout_marginBottom="@dimen/dp5"
+                    android:gravity="left">
+
+                    <ImageButton
+                        android:id="@+id/btReply"
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp16"
+                        android:background="@drawable/ic_twitter_reply_outline"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
+                    <ImageButton
+                        android:id="@+id/btRt"
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp16"
+                        android:background="@drawable/ic_twitter_retweet"
+                        android:layout_marginRight="@dimen/dp5"/>
+                    <TextView
+                        android:id="@+id/tvRT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{tweet.RTCount}"
+                        android:textColor="@color/lightText"
+                        android:textSize="@dimen/dp15"
+                        tools:text="@string/example_rt" />
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
+                    <ImageButton
+                        android:id="@+id/btLike"
+                        android:layout_width="@dimen/dp20"
+                        android:layout_height="@dimen/dp16"
+                        android:layout_marginRight="@dimen/dp5"
+                        android:background="@drawable/ic_twitter_like_outline"/>
+                    <TextView
+                        android:id="@+id/tvLikes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="@dimen/dp15"
+                        android:textSize="@dimen/dp15"
+                        android:textColor="@color/lightText"
+                        android:text="@{tweet.liked}"
+                        tools:text="@string/example_lk"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" >
+                    </Space>
                 </LinearLayout>
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='@{tweet.relativeTimeAgo}'
-                    tools:text="@string/example_Date"
-                    android:textSize="@dimen/dp10"
-                    android:textColor="@color/lightText"
-                    android:layout_gravity="right"/>
-
-            </FrameLayout>
-
-            <TextView
-                android:text="@{tweet.body}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp10"
-                android:autoLink="all"
-                tools:text="@string/example_body"
-                android:clickable="false"
-                android:focusable="false"
-                android:id="@+id/tvBody"/>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp5"
-                android:maxHeight="@dimen/dp200">
-                <ImageView
-                    android:id="@+id/ivMedia"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:src="@mipmap/ic_launcher"
-                    android:visibility="gone"/>
-
-                <VideoView
-                    android:id="@+id/vvVideo"
-                    android:layout_width="match_parent"
-                    android:visibility="visible"
-                    android:layout_height="@dimen/dp200" />
-            </FrameLayout>
-            <LinearLayout
-                android:id="@+id/llRTL"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/viewt"
-                android:layout_marginTop="@dimen/dp5"
-                android:layout_marginBottom="@dimen/dp5"
-                android:gravity="left">
-
-                <Button
-                    android:id="@+id/btReply"
-                    android:layout_width="@dimen/dp20"
-                    android:layout_height="@dimen/dp16"
-                    android:background="@drawable/ic_twitter_reply_outline"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
-                <Button
-                    android:id="@+id/btRt"
-                    android:layout_width="@dimen/dp20"
-                    android:layout_height="@dimen/dp16"
-                    android:background="@drawable/ic_twitter_retweet"
-                    android:layout_marginRight="@dimen/dp5"/>
-                <TextView
-                    android:id="@+id/tvRT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{tweet.RTCount}"
-                    android:textColor="@color/lightText"
-                    android:textSize="@dimen/dp15"
-                    tools:text="@string/example_rt" />
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
-                <Button
-                    android:id="@+id/btLike"
-                    android:layout_width="@dimen/dp20"
-                    android:layout_height="@dimen/dp16"
-                    android:layout_marginRight="@dimen/dp5"
-                    android:background="@drawable/ic_twitter_like_outline"/>
-                <TextView
-                    android:id="@+id/tvLikes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/dp15"
-                    android:textColor="@color/lightText"
-                    android:text="@{tweet.liked}"
-                    tools:text="@string/example_lk"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" >
-                </Space>
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 </layout>

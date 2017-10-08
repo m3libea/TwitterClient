@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -20,10 +24,12 @@ import com.codepath.apps.twitterclient.activities.UserActivity;
 import com.codepath.apps.twitterclient.databinding.ItemTweetBinding;
 import com.codepath.apps.twitterclient.models.MediaTweet;
 import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.utils.PatternEditableBuilder;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -37,6 +43,28 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     private Context context;
     private List<Tweet> tweets;
+    private TweetActionListener actionListener;
+    private TweetClickListener clickListener;
+
+    public interface TweetActionListener {
+        void reply(Tweet tweet);
+        void setLikeStatus(Tweet tweet, boolean b);
+        void retweet(Tweet tweet);
+
+    }
+
+    public interface TweetClickListener {
+        void showUser(String screename);
+        void showHT(String query);
+    }
+
+    public void setActionListener(TweetActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    public void setClickListener(TweetClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -49,6 +77,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
 
         public void bind(Tweet tweet){
+
+            int idcolor = tweet.retweeted ? R.color.primary : R.color.lightText;
+            int color = ContextCompat.getColor(context, idcolor);
+            binding.btRt.setSelected(tweet.retweeted);
+            binding.btRt.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+
+            Drawable icon = ContextCompat
+                    .getDrawable(context, tweet.favorited? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
+            binding.btLike.setBackground(icon);
+            binding.tvLikes.setText(Integer.toString(tweet.getfCount()));
+            binding.btLike.setSelected(tweet.favorited);
+
 
             Glide.with(getContext())
                     .load(tweet.getUser().getProfileImageURL())
@@ -99,8 +139,92 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 binding.vvVideo.setVisibility(View.GONE);
             }
 
+            if(tweet.getRetweeted()){
+                binding.btRt.setEnabled(false);
+                binding.btRt.getBackground()
+                                .setColorFilter(ContextCompat
+                                .getColor(context, R.color.primary) ,PorterDuff.Mode.SRC_IN);
+            }else{
+                binding.btRt.setOnClickListener(view -> {
+                    view.setSelected(!view.isSelected());
+                    setRtBT(tweet);
+
+                    view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                    int iColor = view.isSelected() ? R.color.primary : R.color.lightText;
+                    int c = ContextCompat.getColor(context, iColor);
+                    view.getBackground().setColorFilter(c, PorterDuff.Mode.SRC_IN);
+                    if (actionListener != null){
+                        actionListener.retweet(tweet);
+                    }
+                    tweet.save();
+                    view.setEnabled(false);
+                });
+            }
+
+            binding.btLike.setOnClickListener(view -> {
+                view.setSelected(!view.isSelected());
+                setLikeBT(tweet);
+
+                view.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                Drawable i = ContextCompat
+                        .getDrawable(context, view.isSelected()? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
+                view.setBackground(i);
+                if (actionListener != null){
+                    actionListener.setLikeStatus(tweet, tweet.getFavorited());
+                }
+                tweet.save();
+            });
+
+            binding.btReply.setOnClickListener(view -> {
+                actionListener.reply(tweet);
+            });
+
+            //SPAN
+
+            binding.tvBody.setText(tweet.getBody());
+            setExtraInfo(tweet);
+
+            // Style clickable spans based on pattern
+            new PatternEditableBuilder()
+                    .addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(context, R.color.primary),
+                            text -> clickListener.showUser(text.replace("@","")))
+                    .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(context, R.color.primary_dark),
+                            text -> clickListener.showHT(text))
+                    .into(binding.tvBody);
+
+
         }
 
+        private void setExtraInfo(Tweet tweet) {
+            if (tweet.getRetweet()){
+                binding.tvExtra.setText("Retweeted by " + tweet.getRetweetedBy());
+                binding.ivExtra.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_twitter_retweet));
+                binding.llInfo.setVisibility(View.VISIBLE);
+            }else if (tweet.getReplyTo() != null) {
+                binding.tvExtra.setText("Reply to " + tweet.getReplyTo());
+                binding.ivExtra.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_reply));
+                binding.llInfo.setVisibility(View.VISIBLE);
+            }else{
+                binding.llInfo.setVisibility(View.GONE);
+            }
+        }
+
+        private void setLikeBT(Tweet tweet) {
+            tweet.setFavorited(binding.btLike.isSelected());
+            tweet.setfCount(tweet.getFavorited()? tweet.getfCount() + 1 : tweet.getfCount() - 1);
+            if (tweet.getfCount() == 0){
+                binding.tvLikes.setText(" ");
+            }else{
+                binding.tvLikes.setText(Integer.toString(tweet.getfCount()));
+            }
+
+        }
+
+        private void setRtBT(Tweet tweet) {
+            tweet.setRetweeted(binding.btRt.isSelected());
+            tweet.setRtCount(tweet.getRtCount() + 1 );
+            binding.tvRT.setText(Integer.toString(tweet.getRtCount()));
+        }
         private void setVideo(String url) {
             binding.vvVideo.setVideoPath(url);
 
@@ -132,6 +256,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             });
         }
     }
+
 
 
 
