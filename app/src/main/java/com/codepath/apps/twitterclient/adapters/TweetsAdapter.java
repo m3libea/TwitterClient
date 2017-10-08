@@ -78,13 +78,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         public void bind(Tweet tweet){
 
-            int idcolor = binding.btRt.isSelected() ? R.color.primary : R.color.lightText;
+            int idcolor = tweet.retweeted ? R.color.primary : R.color.lightText;
             int color = ContextCompat.getColor(context, idcolor);
+            binding.btRt.setSelected(tweet.retweeted);
             binding.btRt.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
             Drawable icon = ContextCompat
-                    .getDrawable(context, binding.btLike.isSelected()? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
+                    .getDrawable(context, tweet.favorited? R.drawable.ic_twitter_like : R.drawable.ic_twitter_like_outline);
             binding.btLike.setBackground(icon);
+            binding.tvLikes.setText(Integer.toString(tweet.getfCount()));
+            binding.btLike.setSelected(tweet.favorited);
+
 
             Glide.with(getContext())
                     .load(tweet.getUser().getProfileImageURL())

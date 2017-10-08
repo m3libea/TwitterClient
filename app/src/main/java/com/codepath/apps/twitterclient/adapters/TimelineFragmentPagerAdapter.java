@@ -3,6 +3,7 @@ package com.codepath.apps.twitterclient.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.codepath.apps.twitterclient.fragments.DMsFragment;
 import com.codepath.apps.twitterclient.fragments.HometimelineFragment;
 import com.codepath.apps.twitterclient.fragments.MentionsFragment;
 import com.codepath.apps.twitterclient.fragments.SearchFragment;
@@ -14,7 +15,7 @@ import com.codepath.apps.twitterclient.utils.SmartFragmentStatePagerAdapter;
 
 public class TimelineFragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 3;
+    final int PAGE_COUNT = 4;
 
     public TimelineFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,15 +26,24 @@ public class TimelineFragmentPagerAdapter extends SmartFragmentStatePagerAdapter
     public Fragment getItem(int position) {
 
         Fragment f;
-        if (position == 0) {
-            f = new HometimelineFragment();
-        } else if (position == 1) {
-            f = new MentionsFragment();
-        } else if (position == 2){
-            f = new SearchFragment();
-        } else {
-            f = null;
+
+        switch (position){
+            case 0:
+                f = new HometimelineFragment();
+                break;
+            case 1:
+                f = new MentionsFragment();
+                break;
+            case 2:
+                f = new SearchFragment();
+                break;
+            case 3:
+                f = new DMsFragment();
+                break;
+            default:
+                f = null;
         }
+
         return f;
     }
 

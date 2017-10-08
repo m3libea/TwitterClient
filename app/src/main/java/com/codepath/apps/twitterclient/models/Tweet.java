@@ -150,8 +150,8 @@ public class Tweet extends BaseModel{
                 tweet.rtCount = jsonObject.getInt("retweet_count");
             }
             tweet.favorited = jsonObject.getBoolean("favorited");
-            if(!jsonObject.isNull("favourites_count")) {
-                tweet.fCount = jsonObject.getInt("favourites_count");
+            if(!jsonObject.isNull("favorite_count")) {
+                tweet.fCount = jsonObject.getInt("favorite_count");
             }
             if(!jsonObject.isNull("entities")) {
                 JSONObject entitiesObj = jsonObject.getJSONObject("entities");

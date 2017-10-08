@@ -164,6 +164,7 @@
                         android:id="@+id/tvLikes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="@dimen/dp15"
                         android:textSize="@dimen/dp15"
                         android:textColor="@color/lightText"
                         android:text="@{tweet.liked}"

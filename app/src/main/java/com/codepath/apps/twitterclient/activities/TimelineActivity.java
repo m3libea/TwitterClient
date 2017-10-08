@@ -172,7 +172,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
         int[] imageResId = {
                 R.drawable.ic_twitter_home,
                 R.drawable.ic_twitter_alert_2,
-                R.drawable.ic_twitter_search};
+                R.drawable.ic_twitter_search,
+                R.drawable.ic_twitter_message};
         ColorStateList colors;
 
         if (Build.VERSION.SDK_INT >= 23) {
