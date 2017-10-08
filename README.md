@@ -8,7 +8,7 @@ Time spent: **20** hours spent in total
 
 The following **required** functionality is completed:
 
-* [X] The app includes **all required user stories** from Week 3 Twitter Client
+* [X] The app includes **all required user stories** from [Week 3 Twitter Client](https://github.com/m3libea/TwitterClient/tree/week3)
 * [X] User can **switch between Timeline and Mention views using tabs**
   * [X] User can view their home timeline tweets.
   * [X] User can view the recent mentions of their username.
