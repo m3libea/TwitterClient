@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +20,17 @@ import com.codepath.apps.twitterclient.databinding.ActivityUserBinding;
 import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.codepath.apps.twitterclient.models.User;
+import com.codepath.apps.twitterclient.utils.PatternEditableBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+import cz.msebera.android.httpclient.Header;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -90,6 +98,44 @@ public class UserActivity extends AppCompatActivity {
             i.putExtra("following", true);
             startActivity(i);
 
+        });
+
+        //SPAN hashtag, user
+
+        binding.tvDescription.setText(user.getDescription());
+        new PatternEditableBuilder()
+                .addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(this, R.color.primary),
+                        text -> showUser(text.replace("@","")))
+                .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(this, R.color.primary_dark),
+                        text -> showHT(text))
+                .into(binding.tvDescription);
+    }
+
+    private void showHT(String query) {
+        Intent i = new Intent(this, SearchActivity.class);
+        i.putExtra("query", query);
+        startActivity(i);
+    }
+
+    private void showUser(String screename) {
+        client.getUser(screename, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                User user = null;
+                try {
+                    user = User.fromJSON(response.getJSONObject(0));
+                    Intent i = new Intent(UserActivity.this, UserActivity.class);
+                    i.putExtra("user", Parcels.wrap(user));
+                    startActivity(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
         });
     }
 
