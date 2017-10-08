@@ -1,6 +1,7 @@
 package com.codepath.apps.twitterclient.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
-public class FollowActivity extends AppCompatActivity {
+public class FollowActivity extends AppCompatActivity implements FollowAdapter.TweetClickListener{
 
     private final String TAG = "FollowActivity";
     private TwitterClient client;
@@ -72,6 +73,7 @@ public class FollowActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(title);
 
         aTweets = new FollowAdapter(this, users);
+        aTweets.setListener(this);
         binding.rvUsers.setAdapter(aTweets);
         lyManager = new LinearLayoutManager(getContext());
         binding.rvUsers.setLayoutManager(lyManager);
@@ -157,5 +159,35 @@ public class FollowActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showUser(String screename) {
+        client.getUser(screename, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                User user = null;
+                try {
+                    user = User.fromJSON(response.getJSONObject(0));
+                    Intent i = new Intent(FollowActivity.this, UserActivity.class);
+                    i.putExtra("user", Parcels.wrap(user));
+                    startActivity(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    @Override
+    public void showHT(String query) {
+        Intent i = new Intent(FollowActivity.this, SearchActivity.class);
+        i.putExtra("query", query);
+        startActivity(i);
     }
 }
